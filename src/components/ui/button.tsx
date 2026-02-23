@@ -20,7 +20,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		...props 
 	}, ref) {
 		const variants = {
-			default: 'bg-black text-white hover:bg-gray-800',
+			default: '!bg-black text-white hover:!bg-gray-800',
 			outline: 'border border-gray-300 text-gray-900 hover:bg-gray-50',
 			ghost: 'text-gray-900 hover:bg-gray-100',
 		};
@@ -35,6 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			'rounded-md font-medium transition-colors duration-200 inline-flex items-center justify-center',
 			variants[variant],
 			sizes[size],
+			props.disabled && 'opacity-50 cursor-not-allowed',
 			className
 		);
 

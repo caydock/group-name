@@ -13,16 +13,21 @@ interface SubmitGroupNameFormProps {
 	}>;
 }
 
-export function SubmitGroupNameForm({ categories }: SubmitGroupNameFormProps) {
+	export function SubmitGroupNameForm({ categories }: SubmitGroupNameFormProps) {
 	const [name, setName] = useState('');
 	const [categoryId, setCategoryId] = useState<number | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+	const handleCategorySelect = (id: number) => {
+		console.log('Category selected:', id);
+		setCategoryId(id);
+	};
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		
-		if (!name.trim() || !categoryId) {
+
+		if (!name.trim() || categoryId === null) {
 			setSubmitStatus('error');
 			return;
 		}
@@ -38,7 +43,7 @@ export function SubmitGroupNameForm({ categories }: SubmitGroupNameFormProps) {
 				},
 				body: JSON.stringify({
 					name: name.trim(),
-					categoryId,
+					categoryId: categoryId === 0 ? null : categoryId,
 				}),
 			});
 
@@ -83,24 +88,40 @@ export function SubmitGroupNameForm({ categories }: SubmitGroupNameFormProps) {
 					分类 <span className="text-red-500">*</span>
 				</label>
 				<div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-					{categories.map((category) => (
-						<button
+					{categories.map((category) => {
+						const isSelected = categoryId === category.id;
+						return (
+						<div
 							key={category.id}
-							type="button"
-							onClick={() => setCategoryId(category.id)}
+							onClick={() => handleCategorySelect(category.id)}
 							className={cn(
-								'flex items-center gap-2 p-3 border rounded-lg transition-all',
-								'hover:border-gray-400',
-								categoryId === category.id
+								'flex items-center gap-2 p-3 border rounded-lg transition-all cursor-pointer select-none',
+								'hover:border-gray-400 hover:bg-gray-50',
+								isSelected
 									? 'border-black bg-gray-50'
-									: 'border-gray-200'
+									: 'border-gray-200',
+								isSubmitting && 'opacity-50 pointer-events-none'
 							)}
-							disabled={isSubmitting}
 						>
 							{category.icon && <span className="text-xl">{category.icon}</span>}
 							<span className="text-sm font-medium">{category.name}</span>
-						</button>
-					))}
+						</div>
+						);
+					})}
+					<div
+						onClick={() => handleCategorySelect(0)}
+						className={cn(
+							'flex items-center gap-2 p-3 border rounded-lg transition-all cursor-pointer select-none',
+							'hover:border-gray-400 hover:bg-gray-50',
+							categoryId === 0
+								? 'border-black bg-gray-50'
+								: 'border-gray-200',
+							isSubmitting && 'opacity-50 pointer-events-none'
+						)}
+					>
+						<span className="text-xl">➕</span>
+						<span className="text-sm font-medium">其他</span>
+					</div>
 				</div>
 			</div>
 
@@ -123,7 +144,7 @@ export function SubmitGroupNameForm({ categories }: SubmitGroupNameFormProps) {
 			<Button
 				type="submit"
 				className="w-full"
-				disabled={isSubmitting || !name.trim() || !categoryId}
+				disabled={isSubmitting || !name.trim() || categoryId === null}
 			>
 				{isSubmitting ? '提交中...' : '提交群名'}
 			</Button>

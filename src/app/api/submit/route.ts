@@ -22,13 +22,6 @@ export async function POST(request: Request) {
 			);
 		}
 
-		if (!categoryId) {
-			return NextResponse.json(
-				{ error: '请选择分类' },
-				{ status: 400 }
-			);
-		}
-
 		const db = getDB();
 		const userId = nanoid();
 		

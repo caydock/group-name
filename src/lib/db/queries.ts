@@ -209,7 +209,7 @@ export async function getFeaturedCollections(db: DB, limit: number = 6) {
 
 export async function createGroupName(db: DB, data: {
   name: string;
-  categoryId: number;
+  categoryId?: number | null;
   userId?: string;
   collectionId?: number;
 }) {
@@ -217,7 +217,7 @@ export async function createGroupName(db: DB, data: {
     .insert(groupNames)
     .values({
       name: data.name,
-      categoryId: data.categoryId,
+      categoryId: data.categoryId || null,
       userId: data.userId,
       collectionId: data.collectionId,
     })
