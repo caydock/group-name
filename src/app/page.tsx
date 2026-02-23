@@ -3,9 +3,8 @@ import { getLatestGroupNames, getPopularGroupNames, getAllCategories, getFeature
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import { CategoryCard } from '@/components/group-name/category-card';
 import { CollectionCard } from '@/components/group-name/collection-card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, TrendingUp, Clock } from 'lucide-react';
+import { Search, TrendingUp, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -26,43 +25,6 @@ export default async function HomePage() {
 
 	return (
 		<div className="min-h-screen bg-white">
-			<header className="border-b border-gray-200 sticky top-0 bg-white z-50">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex items-center justify-between h-16">
-						<Link href="/" className="text-2xl font-bold text-gray-900">
-							群名大全
-						</Link>
-						<nav className="hidden md:flex items-center gap-6">
-							<Link href="/" className="text-gray-600 hover:text-gray-900">
-								首页
-							</Link>
-							<Link href="/categories" className="text-gray-600 hover:text-gray-900">
-								分类
-							</Link>
-							<Link href="/collections" className="text-gray-600 hover:text-gray-900">
-								合集
-							</Link>
-						</nav>
-						<div className="flex items-center gap-3">
-							<div className="relative hidden sm:block">
-								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-								<Input
-									type="search"
-									placeholder="搜索群名..."
-									className="pl-10 w-64"
-								/>
-							</div>
-							<Button asChild>
-								<Link href="/submit">
-									<Plus className="h-4 w-4 mr-2" />
-									提交群名
-								</Link>
-							</Button>
-						</div>
-					</div>
-				</div>
-			</header>
-
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<section className="text-center py-12 mb-12 bg-gradient-to-b from-gray-50 to-white">
 					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
