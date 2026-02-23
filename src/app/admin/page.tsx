@@ -3,6 +3,12 @@ import { getDashboardStats, getPendingGroupNames } from '@/lib/db/queries';
 import { StatCard } from '@/components/admin/stat-card';
 import { PendingGroupNamesTable } from '@/components/admin/pending-group-names-table';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: '管理后台 ',
+	description: '群名大全管理后台，审核用户提交的群名，管理分类和合集',
+};
 
 export default async function AdminDashboardPage() {
 	const db = getDB();

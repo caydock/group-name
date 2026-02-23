@@ -2,6 +2,12 @@ import { getDB } from '@/lib/db';
 import { getPendingGroupNames } from '@/lib/db/queries';
 import { Button } from '@/components/ui/button';
 import { PendingGroupNamesTable } from '@/components/admin/pending-group-names-table';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: '群名审核 - 管理后台',
+	description: '审核用户提交的群名，批准或拒绝提交内容',
+};
 
 interface GroupNamesPageProps {
 	searchParams: Promise<{ page?: string }>;

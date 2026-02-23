@@ -5,8 +5,9 @@ import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: '全部合集',
-	description: '精选群名合集，按主题整理的群名集合',
+	title: '群名合集 ',
+	description: '精选群名合集，按主题整理的群名集合，包括搞笑合集、文艺合集、节日合集等，快速获取相关主题的群聊名称',
+	keywords: '群名合集,群名收藏,精选群名,搞笑群名合集,文艺群名合集,群名推荐',
 };
 
 export default async function CollectionsPage() {

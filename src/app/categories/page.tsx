@@ -5,8 +5,9 @@ import { Folder } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: '全部分类',
-	description: '浏览所有群名分类，包括搞笑、文艺、商务、家庭、校园、游戏等',
+	title: '群名分类 ',
+	description: '浏览所有群名分类，包括搞笑、文艺、商务、家庭、校园、游戏等各种风格分类，快速找到您喜欢的群聊名称',
+	keywords: '群名分类,微信群名分类,搞笑群名,文艺群名,商务群名,家庭群名,校园群名,游戏群名',
 };
 
 export default async function CategoriesPage() {

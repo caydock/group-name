@@ -3,10 +3,29 @@ import { getGroupNamesByCategory, getCategoryById } from '@/lib/db/queries';
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 interface CategoryPageProps {
 	params: Promise<{ id: string }>;
 	searchParams: Promise<{ page?: string }>;
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+	const db = getDB();
+	const { id } = await params;
+	const category = await getCategoryById(db, parseInt(id));
+
+	if (!category) {
+		return {
+			title: '分类不存在',
+		};
+	}
+
+	return {
+		title: `${category.name}群名大全`,
+		description: category.description || `查看${category.name}分类下的所有群名`,
+		keywords: `${category.name},群名,微信群名,QQ群名,${category.name}群名`,
+	};
 }
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {

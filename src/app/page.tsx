@@ -9,8 +9,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: '首页',
-	description: '群名大全首页，发现最新和最受欢迎的微信群名，按分类浏览，精选合集推荐',
+	title: '群名大全 - 有趣的微信群名、QQ群名、群聊名称大全',
+	description: '群名大全提供海量有趣的微信群名、QQ群名、群聊名称，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类，支持按分类浏览、查看最新和热门群名，一键复制使用',
+	keywords: '群名大全,微信群名,QQ群名,群聊名称,搞笑群名,文艺群名,群名推荐,群名大全',
 };
 
 export default async function HomePage() {

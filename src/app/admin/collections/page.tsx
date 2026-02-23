@@ -1,5 +1,11 @@
 import { getDB } from '@/lib/db';
 import { getAllCollections } from '@/lib/db/queries';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: '合集管理 - 管理后台',
+	description: '管理群名合集，查看和编辑合集信息',
+};
 
 interface CollectionItem {
 	id: number;

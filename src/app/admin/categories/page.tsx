@@ -1,5 +1,11 @@
 import { getDB } from '@/lib/db';
 import { getAllCategories } from '@/lib/db/queries';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: '分类管理 - 管理后台',
+	description: '管理群名分类，查看和编辑分类信息',
+};
 
 export default async function CategoriesPage() {
 	const db = getDB();

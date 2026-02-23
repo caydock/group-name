@@ -6,8 +6,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: '最新群名',
-	description: '浏览最新的微信群名，发现有趣的群聊名称',
+	title: '最新群名 ',
+	description: '浏览最新提交的微信群名、QQ群名，发现最新的有趣群聊名称，紧跟流行趋势',
+	keywords: '最新群名,最新微信群名,新群名,流行群名,群名推荐',
 };
 
 interface LatestPageProps {

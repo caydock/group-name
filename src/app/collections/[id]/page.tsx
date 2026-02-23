@@ -3,10 +3,29 @@ import { getGroupNamesByCollection, getCollectionById } from '@/lib/db/queries';
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 interface CollectionPageProps {
 	params: Promise<{ id: string }>;
 	searchParams: Promise<{ page?: string }>;
+}
+
+export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
+	const db = getDB();
+	const { id } = await params;
+	const collection = await getCollectionById(db, parseInt(id));
+
+	if (!collection) {
+		return {
+			title: '合集不存在',
+		};
+	}
+
+	return {
+		title: `${collection.name} - 群名合集`,
+		description: collection.description || `查看${collection.name}合集下的所有群名`,
+		keywords: `${collection.name},群名合集,微信群名,QQ群名,${collection.name}群名`,
+	};
 }
 
 export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
