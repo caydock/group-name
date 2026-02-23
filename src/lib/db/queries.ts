@@ -411,3 +411,122 @@ export async function deleteCollection(db: DB, id: number) {
     .delete(collections)
     .where(eq(collections.id, id));
 }
+
+export async function getAllGroupNames(
+  db: DB,
+  page: number = 1,
+  pageSize: number = 20,
+  filters: {
+    status?: 'pending' | 'approved' | 'rejected';
+    categoryId?: number;
+    collectionId?: number;
+    search?: string;
+  } = {}
+) {
+  const offset = (page - 1) * pageSize;
+  const conditions = [];
+
+  if (filters.status) {
+    conditions.push(eq(groupNames.status, filters.status));
+  }
+  if (filters.categoryId) {
+    conditions.push(eq(groupNames.categoryId, filters.categoryId));
+  }
+  if (filters.collectionId) {
+    conditions.push(eq(groupNames.collectionId, filters.collectionId));
+  }
+  if (filters.search) {
+    conditions.push(like(groupNames.name, `%${filters.search}%`));
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const [data, total] = await Promise.all([
+    db
+      .select({
+        id: groupNames.id,
+        name: groupNames.name,
+        status: groupNames.status,
+        views: groupNames.views,
+        likes: groupNames.likes,
+        copies: groupNames.copies,
+        createdAt: groupNames.createdAt,
+        updatedAt: groupNames.updatedAt,
+        category: {
+          id: categories.id,
+          name: categories.name,
+          icon: categories.icon,
+        },
+        collection: {
+          id: collections.id,
+          name: collections.name,
+        },
+      })
+      .from(groupNames)
+      .leftJoin(categories, eq(groupNames.categoryId, categories.id))
+      .leftJoin(collections, eq(groupNames.collectionId, collections.id))
+      .where(whereClause)
+      .orderBy(desc(groupNames.createdAt))
+      .limit(pageSize)
+      .offset(offset),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(groupNames)
+      .where(whereClause)
+      .then((result: any) => result[0]?.count ?? 0),
+  ]);
+
+  return { data, total, page, pageSize };
+}
+
+export async function createCategory(db: DB, data: {
+  name: string;
+  description?: string;
+  icon?: string;
+  sortOrder?: number;
+}) {
+  const result = await db
+    .insert(categories)
+    .values(data)
+    .returning({ id: categories.id });
+
+  return result[0];
+}
+
+export async function updateCategory(db: DB, id: number, data: {
+  name?: string;
+  description?: string;
+  icon?: string;
+  sortOrder?: number;
+}) {
+  await db
+    .update(categories)
+    .set(data)
+    .where(eq(categories.id, id));
+}
+
+export async function deleteCategory(db: DB, id: number) {
+  await db
+    .delete(categories)
+    .where(eq(categories.id, id));
+}
+
+export async function deleteGroupName(db: DB, id: number) {
+  await db
+    .delete(groupNames)
+    .where(eq(groupNames.id, id));
+}
+
+export async function updateGroupNameCategory(db: DB, id: number, categoryId: number | null) {
+  await db
+    .update(groupNames)
+    .set({ categoryId, updatedAt: new Date() })
+    .where(eq(groupNames.id, id));
+}
+
+export async function updateGroupNameCollection(db: DB, id: number, collectionId: number | null) {
+  await db
+    .update(groupNames)
+    .set({ collectionId, updatedAt: new Date() })
+    .where(eq(groupNames.id, id));
+}

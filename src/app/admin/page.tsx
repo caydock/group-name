@@ -1,67 +1,200 @@
-import { getDB } from '@/lib/db';
-import { getDashboardStats, getPendingGroupNames } from '@/lib/db/queries';
-import { StatCard } from '@/components/admin/stat-card';
-import { PendingGroupNamesTable } from '@/components/admin/pending-group-names-table';
-import Link from 'next/link';
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-	title: '管理后台 ',
-	description: '群名大全管理后台，审核用户提交的群名，管理分类和合集',
-};
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { BarChart3, CheckCircle, Folder, BookOpen, LogOut } from 'lucide-react';
+import { DashboardTab } from '@/components/admin/tabs/dashboard-tab';
+import { GroupNamesTab } from '@/components/admin/tabs/group-names-tab';
+import { CategoriesTab } from '@/components/admin/tabs/categories-tab';
+import { CollectionsTab } from '@/components/admin/tabs/collections-tab';
 
-export default async function AdminDashboardPage() {
-	const db = getDB();
-	const [stats, pendingResult] = await Promise.all([
-		getDashboardStats(db),
-		getPendingGroupNames(db, 1, 10),
-	]);
+type Tab = 'dashboard' | 'group-names' | 'categories' | 'collections';
+
+export default function AdminPage() {
+	const router = useRouter();
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+
+	useEffect(() => {
+		checkAuth();
+	}, []);
+
+	const checkAuth = async () => {
+		try {
+			const res = await fetch('/api/admin/check-auth', {
+				credentials: 'include',
+			});
+			setIsAuthenticated(res.ok);
+		} catch (error) {
+			setIsAuthenticated(false);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleLogout = async () => {
+		await fetch('/api/admin/logout', { method: 'POST' });
+		setIsAuthenticated(false);
+		router.push('/');
+	};
+
+	if (isLoading) {
+		return (
+			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+				<div className="text-gray-600">加载中...</div>
+			</div>
+		);
+	}
+
+	if (!isAuthenticated) {
+		return (
+			<div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+				<LoginForm onSuccess={() => setIsAuthenticated(true)} />
+			</div>
+		);
+	}
 
 	return (
-		<div>
-			<h1 className="text-2xl font-bold text-gray-900 mb-6">数据统计</h1>
-
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-				<StatCard
-					title="总群名数"
-					value={stats.totalNames}
-					icon="📝"
-				/>
-				<StatCard
-					title="待审核"
-					value={stats.pendingNames}
-					icon="⏳"
-					className="bg-yellow-50 border-yellow-200"
-				/>
-				<StatCard
-					title="已通过"
-					value={stats.approvedNames}
-					icon="✅"
-					className="bg-green-50 border-green-200"
-				/>
-				<StatCard
-					title="今日新增"
-					value={stats.todayNames}
-					icon="📅"
-				/>
-			</div>
-
-			{pendingResult.data.length > 0 && (
-				<div className="bg-white border border-gray-200 rounded-lg p-6">
-					<h2 className="text-lg font-semibold text-gray-900 mb-4">
-						待审核群名
-					</h2>
-					<PendingGroupNamesTable groupNames={pendingResult.data} />
-					{pendingResult.total > pendingResult.pageSize && (
-						<Link
-							href="/admin/group-names"
-							className="inline-flex items-center mt-4 text-sm text-gray-600 hover:text-gray-900"
-						>
-							查看全部 {pendingResult.total} 条待审核 →
-						</Link>
-					)}
+		<div className="min-h-screen bg-gray-50 flex">
+			<aside className="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col">
+				<nav className="flex-1 p-4 space-y-1 overflow-auto">
+					<button
+						onClick={() => setActiveTab('dashboard')}
+						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+							activeTab === 'dashboard'
+								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
+								: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<BarChart3 className="h-5 w-5" />
+						数据统计
+					</button>
+					<button
+						onClick={() => setActiveTab('group-names')}
+						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+							activeTab === 'group-names'
+								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
+								: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<CheckCircle className="h-5 w-5" />
+						群名管理
+					</button>
+					<button
+						onClick={() => setActiveTab('categories')}
+						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+							activeTab === 'categories'
+								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
+								: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<Folder className="h-5 w-5" />
+						分类管理
+					</button>
+					<button
+						onClick={() => setActiveTab('collections')}
+						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+							activeTab === 'collections'
+								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
+								: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<BookOpen className="h-5 w-5" />
+						合集管理
+					</button>
+				</nav>
+				<div className="p-4 border-t border-gray-200 bg-white">
+					<button
+						onClick={handleLogout}
+						className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+					>
+						<LogOut className="h-4 w-4" />
+						退出登录
+					</button>
 				</div>
-			)}
+			</aside>
+
+			<main className="flex-1 overflow-auto">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+					{activeTab === 'dashboard' && <DashboardTab />}
+					{activeTab === 'group-names' && <GroupNamesTab />}
+					{activeTab === 'categories' && <CategoriesTab />}
+					{activeTab === 'collections' && <CollectionsTab />}
+				</div>
+			</main>
+		</div>
+	);
+}
+
+function LoginForm({ onSuccess }: { onSuccess: () => void }) {
+	const [token, setToken] = useState('');
+	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setError('');
+		setLoading(true);
+
+		try {
+			const res = await fetch('/api/admin/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ token }),
+			});
+
+			if (!res.ok) {
+				const data = await res.json() as { error?: string };
+				throw new Error(data.error || '登录失败');
+			}
+
+			onSuccess();
+		} catch (err) {
+			setError(err instanceof Error ? err.message : '登录失败，请重试');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return (
+		<div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 w-full max-w-md">
+			<h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+				后台登录
+			</h1>
+
+			<form onSubmit={handleSubmit} className="space-y-4">
+				<div>
+					<label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-1">
+						访问令牌
+					</label>
+					<input
+						id="token"
+						type="password"
+						value={token}
+						onChange={(e) => setToken(e.target.value)}
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+						required
+					/>
+				</div>
+
+				{error && (
+					<div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-600">
+						{error}
+					</div>
+				)}
+
+				<Button type="submit" className="w-full" disabled={loading}>
+					{loading ? '登录中...' : '登录'}
+				</Button>
+			</form>
+
+			<div className="mt-6 text-center text-sm text-gray-500">
+				<a href="/" className="hover:text-gray-700">
+					返回首页
+				</a>
+			</div>
 		</div>
 	);
 }
