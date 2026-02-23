@@ -12,20 +12,30 @@
 		"publish": true
 	},
 	"dependencies": {
+		"@cloudflare/workers-types": "^4.20260228.0",
 		"@opennextjs/cloudflare": "1.14.0",
+		"better-sqlite3": "^12.6.2",
+		"clsx": "^2.1.1",
+		"drizzle-orm": "^0.45.1",
+		"lucide-react": "^0.575.0",
+		"nanoid": "^5.1.6",
 		"next": "16.0.7",
 		"react": "19.2.1",
-		"react-dom": "19.2.1"
+		"react-dom": "19.2.1",
+		"tailwind-merge": "^3.5.0"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "3",
 		"@tailwindcss/postcss": "4.1.17",
+		"@types/better-sqlite3": "^7.6.13",
 		"@types/node": "24.10.1",
 		"@types/react": "19.2.7",
 		"@types/react-dom": "19.2.3",
+		"drizzle-kit": "^0.31.9",
 		"eslint": "9.39.2",
 		"eslint-config-next": "16.0.7",
 		"tailwindcss": "4.1.17",
+		"tsx": "^4.21.0",
 		"typescript": "5.9.3",
 		"wrangler": "4.56.0"
 	},
@@ -38,6 +48,13 @@
 		"dev": "next dev",
 		"lint": "next lint",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-		"start": "next start"
+		"start": "next start",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate:local": "tsx scripts/init-local-db.ts",
+		"db:migrate:prod": "wrangler d1 migrations apply group-name-db --remote",
+		"db:studio": "drizzle-kit studio",
+		"db:push:local": "drizzle-kit push --config=drizzle.config.ts",
+		"db:push:prod": "drizzle-kit push --config=drizzle.config.ts --config=productionConfig",
+		"db:seed": "tsx scripts/seed.ts"
 	}
 }

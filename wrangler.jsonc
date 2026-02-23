@@ -15,5 +15,12 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "group-name-db",
+			"database_id": "placeholder-replace-with-actual-id"
+		}
+	]
 }

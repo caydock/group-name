@@ -1,87 +1,198 @@
-import Image from "next/image";
+import { getDB } from '@/lib/db';
+import { getLatestGroupNames, getPopularGroupNames, getAllCategories, getFeaturedCollections } from '@/lib/db/queries';
+import { GroupNameCard } from '@/components/group-name/group-name-card';
+import { CategoryCard } from '@/components/group-name/category-card';
+import { CollectionCard } from '@/components/group-name/collection-card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Search, Plus, TrendingUp, Clock } from 'lucide-react';
+import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export default function Home() {
+export const metadata: Metadata = {
+	title: '首页',
+	description: '群名大全首页，发现最新和最受欢迎的微信群名，按分类浏览，精选合集推荐',
+};
+
+export default async function HomePage() {
+	const db = getDB();
+	
+	const [latestNames, popularNames, categories, featuredCollections] = await Promise.all([
+		getLatestGroupNames(db, 12),
+		getPopularGroupNames(db, 12),
+		getAllCategories(db),
+		getFeaturedCollections(db, 6),
+	]);
+
 	return (
-		<div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-			<main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-				<Image
-					className="dark:invert"
-					src="/next.svg"
-					alt="Next.js logo"
-					width={180}
-					height={38}
-					priority
-				/>
-				<ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-					<li className="mb-2 tracking-[-.01em]">
-						Get started by editing{" "}
-						<code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-							src/app/page.tsx
-						</code>
-						.
-					</li>
-					<li className="tracking-[-.01em]">
-						Save and see your changes instantly.
-					</li>
-				</ol>
-
-				<div className="flex gap-4 items-center flex-col sm:flex-row">
-					<a
-						className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-						href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Read our docs
-					</a>
+		<div className="min-h-screen bg-white">
+			<header className="border-b border-gray-200 sticky top-0 bg-white z-50">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="flex items-center justify-between h-16">
+						<Link href="/" className="text-2xl font-bold text-gray-900">
+							群名大全
+						</Link>
+						<nav className="hidden md:flex items-center gap-6">
+							<Link href="/" className="text-gray-600 hover:text-gray-900">
+								首页
+							</Link>
+							<Link href="/categories" className="text-gray-600 hover:text-gray-900">
+								分类
+							</Link>
+							<Link href="/collections" className="text-gray-600 hover:text-gray-900">
+								合集
+							</Link>
+						</nav>
+						<div className="flex items-center gap-3">
+							<div className="relative hidden sm:block">
+								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+								<Input
+									type="search"
+									placeholder="搜索群名..."
+									className="pl-10 w-64"
+								/>
+							</div>
+							<Button asChild>
+								<Link href="/submit">
+									<Plus className="h-4 w-4 mr-2" />
+									提交群名
+								</Link>
+							</Button>
+						</div>
+					</div>
 				</div>
+			</header>
+
+			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+				<section className="text-center py-12 mb-12 bg-gradient-to-b from-gray-50 to-white">
+					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+						有趣的微信群名，一触即得
+					</h1>
+					<p className="text-lg text-gray-600 mb-8">
+						发现、复制和分享有趣的微信群名
+					</p>
+					<div className="max-w-md mx-auto sm:hidden">
+						<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+						<Input
+							type="search"
+							placeholder="搜索群名..."
+							className="pl-10"
+						/>
+					</div>
+				</section>
+
+				<section className="mb-12">
+					<div className="flex items-center justify-between mb-6">
+						<h2 className="text-2xl font-bold text-gray-900">分类浏览</h2>
+						<Link href="/categories" className="text-gray-600 hover:text-gray-900">
+							查看更多 →
+						</Link>
+					</div>
+					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+						{categories.map((category: any) => (
+							<CategoryCard
+								key={category.id}
+								id={category.id}
+								name={category.name}
+								icon={category.icon || undefined}
+							/>
+						))}
+					</div>
+				</section>
+
+				<section className="mb-12">
+					<div className="flex items-center justify-between mb-6">
+						<div className="flex items-center gap-2">
+							<Clock className="h-6 w-6 text-gray-700" />
+							<h2 className="text-2xl font-bold text-gray-900">最新群名</h2>
+						</div>
+						<Link href="/latest" className="text-gray-600 hover:text-gray-900">
+							查看更多 →
+						</Link>
+					</div>
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+						{latestNames.map((item: any) => (
+							<GroupNameCard
+								key={item.id}
+								id={item.id}
+								name={item.name}
+								category={item.category}
+								views={item.views}
+								likes={item.likes}
+								copies={item.copies}
+							/>
+						))}
+					</div>
+				</section>
+
+				<section className="mb-12">
+					<div className="flex items-center justify-between mb-6">
+						<div className="flex items-center gap-2">
+							<TrendingUp className="h-6 w-6 text-gray-700" />
+							<h2 className="text-2xl font-bold text-gray-900">热门群名</h2>
+						</div>
+						<Link href="/popular" className="text-gray-600 hover:text-gray-900">
+							查看更多 →
+						</Link>
+					</div>
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+						{popularNames.map((item: any) => (
+							<GroupNameCard
+								key={item.id}
+								id={item.id}
+								name={item.name}
+								category={item.category}
+								views={item.views}
+								likes={item.likes}
+								copies={item.copies}
+							/>
+						))}
+					</div>
+				</section>
+
+				{featuredCollections.length > 0 && (
+					<section className="mb-12">
+						<div className="flex items-center justify-between mb-6">
+							<h2 className="text-2xl font-bold text-gray-900">精选合集</h2>
+							<Link href="/collections" className="text-gray-600 hover:text-gray-900">
+								查看更多 →
+							</Link>
+						</div>
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+							{featuredCollections.map((collection: any) => (
+								<CollectionCard
+									key={collection.id}
+									id={collection.id}
+									name={collection.name}
+									description={collection.description}
+									coverImage={collection.coverImage}
+									groupNamesCount={collection.groupNamesCount}
+								/>
+							))}
+						</div>
+					</section>
+				)}
 			</main>
-			<footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image
-						aria-hidden
-						src="/file.svg"
-						alt="File icon"
-						width={16}
-						height={16}
-					/>
-					Learn
-				</a>
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image
-						aria-hidden
-						src="/window.svg"
-						alt="Window icon"
-						width={16}
-						height={16}
-					/>
-					Examples
-				</a>
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image
-						aria-hidden
-						src="/globe.svg"
-						alt="Globe icon"
-						width={16}
-						height={16}
-					/>
-					Go to nextjs.org →
-				</a>
+
+			<footer className="border-t border-gray-200 mt-12">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+					<div className="flex flex-col md:flex-row items-center justify-between gap-4">
+						<p className="text-gray-600 text-sm">
+							© 2025 群名大全. 保留所有权利.
+						</p>
+						<div className="flex items-center gap-6 text-sm text-gray-600">
+							<Link href="/" className="hover:text-gray-900">
+								首页
+							</Link>
+							<Link href="/categories" className="hover:text-gray-900">
+								分类
+							</Link>
+							<Link href="/collections" className="hover:text-gray-900">
+								合集
+							</Link>
+						</div>
+					</div>
+				</div>
 			</footer>
 		</div>
 	);
