@@ -38,7 +38,6 @@ export default async function PopularPage({ searchParams }: PopularPageProps) {
 							key={item.id}
 							id={item.id}
 							name={item.name}
-							category={item.category}
 							views={item.views}
 							likes={item.likes}
 							copies={item.copies}

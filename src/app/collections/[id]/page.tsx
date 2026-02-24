@@ -67,7 +67,6 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 							key={item.id}
 							id={item.id}
 							name={item.name}
-							category={item.category}
 							views={item.views}
 							likes={item.likes}
 							copies={item.copies}

@@ -2,17 +2,12 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface GroupNameCardProps {
 	id: number;
 	name: string;
-	category?: {
-		id: number;
-		name: string;
-		icon?: string;
-	};
 	views: number;
 	likes: number;
 	copies: number;
@@ -22,7 +17,6 @@ interface GroupNameCardProps {
 export function GroupNameCard({
 	id,
 	name,
-	category,
 	views,
 	likes,
 	copies,
@@ -32,7 +26,8 @@ export function GroupNameCard({
 	const [liked, setLiked] = useState(false);
 	const [localLikes, setLocalLikes] = useState(likes);
 
-	const handleCopy = async () => {
+	const handleCopy = async (e: React.MouseEvent) => {
+		e.stopPropagation();
 		// 检查 navigator.clipboard 是否可用
 		if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
 			try {
@@ -87,9 +82,10 @@ export function GroupNameCard({
 
 	return (
 		<div
+			onClick={handleCopy}
 			className={cn(
 				'border border-gray-200 rounded-lg p-3',
-				'hover:shadow-md transition-shadow duration-200',
+				'hover:shadow-md transition-shadow duration-200 cursor-pointer',
 				'bg-white',
 				className
 			)}
@@ -99,16 +95,13 @@ export function GroupNameCard({
 					{name}
 				</h3>
 				<div className="flex items-center gap-2">
-					{category && (
-						<span className="inline-flex items-center gap-1 text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded">
-							{category.icon}
-							{category.name}
-						</span>
-					)}
 					<Button
 						variant="ghost"
 						size="sm"
-						onClick={handleLike}
+						onClick={(e) => {
+							e.stopPropagation();
+							handleLike();
+						}}
 						className={cn(
 							'text-gray-600 hover:text-red-500 px-1.5 py-1 h-7',
 							liked && 'text-red-500'
@@ -117,16 +110,13 @@ export function GroupNameCard({
 						<Heart className={cn('h-3.5 w-3.5', liked && 'fill-current')} />
 						<span className="ml-0.5 text-xs">{localLikes}</span>
 					</Button>
-					<Button
-						variant={copied ? 'default' : 'outline'}
-						size="sm"
-						onClick={handleCopy}
-						className="text-gray-600 px-1.5 py-1 h-7 text-xs"
-					>
-						<Copy className="h-3.5 w-3.5" />
-					</Button>
 				</div>
 			</div>
+			{copied && (
+				<div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+					已复制到剪贴板
+				</div>
+			)}
 		</div>
 	);
 }

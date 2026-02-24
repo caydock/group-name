@@ -72,7 +72,6 @@ export default async function HomePage() {
 								key={item.id}
 								id={item.id}
 								name={item.name}
-								category={item.category}
 								views={item.views}
 								likes={item.likes}
 								copies={item.copies}
@@ -97,7 +96,6 @@ export default async function HomePage() {
 								key={item.id}
 								id={item.id}
 								name={item.name}
-								category={item.category}
 								views={item.views}
 								likes={item.likes}
 								copies={item.copies}
