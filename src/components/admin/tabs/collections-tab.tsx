@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DeleteButton } from '@/components/admin/delete-button';
+import { Pencil } from 'lucide-react';
 
 interface Collection {
 	id: number;
@@ -16,6 +17,7 @@ interface Collection {
 export function CollectionsTab() {
 	const [collections, setCollections] = useState<Collection[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [editingId, setEditingId] = useState<number | null>(null);
 	const [formData, setFormData] = useState({
 		name: '',
 		description: '',
@@ -79,6 +81,50 @@ export function CollectionsTab() {
 		});
 	};
 
+	const handleEdit = (collection: Collection) => {
+		setEditingId(collection.id);
+		setFormData({
+			name: collection.name,
+			description: collection.description || '',
+			coverImage: collection.coverImage || '',
+			isFeatured: collection.isFeatured,
+			sortOrder: collection.sortOrder.toString(),
+		});
+	};
+
+	const handleUpdate = async (e: React.FormEvent, id: number) => {
+		e.preventDefault();
+		setError('');
+		setSubmitting(true);
+
+		try {
+			const res = await fetch(`/api/admin/collections/${id}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(formData),
+			});
+
+			if (!res.ok) {
+				const data = await res.json() as { error?: string };
+				throw new Error(data.error || '更新失败');
+			}
+
+			setEditingId(null);
+			setFormData({ name: '', description: '', coverImage: '', isFeatured: false, sortOrder: '0' });
+			loadCollections();
+		} catch (err) {
+			setError(err instanceof Error ? err.message : '更新失败，请重试');
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const handleCancelEdit = () => {
+		setEditingId(null);
+		setFormData({ name: '', description: '', coverImage: '', isFeatured: false, sortOrder: '0' });
+		setError('');
+	};
+
 	if (loading) {
 		return <div className="text-gray-600">加载中...</div>;
 	}
@@ -86,13 +132,13 @@ export function CollectionsTab() {
 	return (
 		<div>
 			<div className="flex items-center justify-between mb-6">
-				<h1 className="text-2xl font-bold text-gray-900">合集管理</h1>
+				<h1 className="text-2xl font-bold text-gray-900 hidden sm:block">合集管理</h1>
 				<span className="text-sm text-gray-600">
 					共 {collections.length} 个合集
 				</span>
 			</div>
 
-			<form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+			<form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 mb-6">
 				<h2 className="text-lg font-semibold text-gray-900 mb-4">添加新合集</h2>
 
 				{error && (
@@ -101,7 +147,7 @@ export function CollectionsTab() {
 					</div>
 				)}
 
-				<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 					<div>
 						<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
 							合集名称 <span className="text-red-500">*</span>
@@ -185,7 +231,7 @@ export function CollectionsTab() {
 				</div>
 			</form>
 
-			<div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+			<div className="bg-white border border-gray-200 rounded-lg overflow-hidden hidden sm:block">
 				<table className="min-w-full divide-y divide-gray-200">
 					<thead>
 						<tr>
@@ -204,7 +250,7 @@ export function CollectionsTab() {
 							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
 								排序
 							</th>
-							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-48">
 								操作
 							</th>
 						</tr>
@@ -233,19 +279,162 @@ export function CollectionsTab() {
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
 									{collection.sortOrder}
 								</td>
-								<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<DeleteButton
-										action={`/api/admin/collections/${collection.id}`}
-										className="text-red-600 hover:text-red-900"
-										onSuccess={loadCollections}
-									>
-										删除
-									</DeleteButton>
+								<td className="px-6 py-4 text-right text-sm font-medium w-48">
+									<div className="flex justify-end gap-2 flex-wrap">
+										{editingId === collection.id ? (
+											<>
+												<button
+													onClick={handleCancelEdit}
+													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+												>
+													取消
+												</button>
+												<button
+													onClick={(e) => handleUpdate(e, collection.id)}
+													className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded font-medium text-sm"
+												>
+													保存
+												</button>
+												<DeleteButton
+													action={`/api/admin/collections/${collection.id}`}
+													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+													onSuccess={loadCollections}
+												>
+													删除
+												</DeleteButton>
+											</>
+										) : (
+											<button
+												onClick={() => handleEdit(collection)}
+												className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+											>
+												<Pencil className="h-4 w-4" />
+												编辑
+											</button>
+										)}
+									</div>
 								</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
+			</div>
+
+			<div className="sm:hidden space-y-4">
+				{collections.map((collection) => (
+					<div key={collection.id} className="bg-white border border-gray-200 rounded-lg p-4">
+						{editingId === collection.id ? (
+							<form onSubmit={(e) => handleUpdate(e, collection.id)} className="space-y-3">
+								{error && (
+									<div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-600">
+										{error}
+									</div>
+								)}
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">合集名称</label>
+									<input
+										name="name"
+										type="text"
+										value={formData.name}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+										required
+									/>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
+									<input
+										name="description"
+										type="text"
+										value={formData.description}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									/>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">封面图片URL</label>
+									<input
+										name="coverImage"
+										type="text"
+										value={formData.coverImage}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									/>
+								</div>
+								<div className="flex items-center gap-2">
+									<input
+										name="isFeatured"
+										type="checkbox"
+										checked={formData.isFeatured}
+										onChange={handleChange}
+										className="h-4 w-4"
+									/>
+									<label className="text-sm font-medium text-gray-700">设为精选</label>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">排序</label>
+									<input
+										name="sortOrder"
+										type="number"
+										value={formData.sortOrder}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									/>
+								</div>
+								<div className="flex gap-2">
+									<button
+										type="button"
+										onClick={handleCancelEdit}
+										className="flex-1 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md"
+									>
+										取消
+									</button>
+									<button
+										type="submit"
+										className="flex-1 px-4 py-2 border border-black bg-black text-white rounded-md disabled:bg-gray-400"
+										disabled={submitting}
+									>
+										{submitting ? '保存中...' : '保存'}
+									</button>
+								</div>
+								<DeleteButton
+									action={`/api/admin/collections/${collection.id}`}
+									className="w-full px-4 py-2 border border-red-500 bg-white text-red-600 rounded-md hover:bg-red-50"
+									onSuccess={loadCollections}
+								>
+									删除
+								</DeleteButton>
+							</form>
+						) : (
+							<>
+								<h3 className="text-base font-semibold text-gray-900 mb-2">{collection.name}</h3>
+								{collection.description && (
+									<p className="text-sm text-gray-600 mb-3">{collection.description}</p>
+								)}
+								<div className="flex flex-wrap gap-2 mb-3">
+									<span className="text-sm text-gray-600">群名数: {collection.groupNamesCount}</span>
+									{collection.isFeatured ? (
+										<span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
+											精选
+										</span>
+									) : (
+										<span className="text-gray-400">非精选</span>
+									)}
+								</div>
+								<div className="flex justify-between items-center pt-3 border-t border-gray-100">
+									<span className="text-sm text-gray-600">排序: {collection.sortOrder}</span>
+									<button
+										onClick={() => handleEdit(collection)}
+										className="px-5 py-2.5 border-2 border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+									>
+										<Pencil className="h-4 w-4" />
+										编辑
+									</button>
+								</div>
+							</>
+						)}
+					</div>
+				))}
 			</div>
 		</div>
 	);

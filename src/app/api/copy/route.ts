@@ -20,9 +20,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({ success: true });
 	} catch (error) {
 		console.error('Error incrementing copy count:', error);
-		return NextResponse.json(
-			{ error: '操作失败' },
-			{ status: 500 }
-		);
+		// 返回 200 而不是 500，避免影响前端体验
+		return NextResponse.json({ success: false, error: '操作失败' }, { status: 200 });
 	}
 }

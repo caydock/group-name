@@ -33,17 +33,40 @@ export function GroupNameCard({
 	const [localLikes, setLocalLikes] = useState(likes);
 
 	const handleCopy = async () => {
-		try {
-			await navigator.clipboard.writeText(name);
-			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
-			await fetch('/api/copy', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id }),
-			});
-		} catch (error) {
-			console.error('Failed to copy:', error);
+		// 检查 navigator.clipboard 是否可用
+		if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+			try {
+				await navigator.clipboard.writeText(name);
+				setCopied(true);
+				setTimeout(() => setCopied(false), 2000);
+
+				// 异步更新数据库，不影响用户体验
+				fetch('/api/copy', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id }),
+				}).catch((err) => {
+					console.warn('Failed to record copy count:', err);
+				});
+			} catch (error) {
+				console.error('Failed to copy:', error);
+			}
+		} else {
+			// 使用降级方案：execCommand
+			try {
+				const textArea = document.createElement('textarea');
+				textArea.value = name;
+				textArea.style.position = 'fixed';
+				textArea.style.left = '-999999px';
+				document.body.appendChild(textArea);
+				textArea.select();
+				document.execCommand('copy');
+				document.body.removeChild(textArea);
+				setCopied(true);
+				setTimeout(() => setCopied(false), 2000);
+			} catch (fallbackError) {
+				console.error('Fallback copy also failed:', fallbackError);
+			}
 		}
 	};
 
@@ -51,15 +74,15 @@ export function GroupNameCard({
 		if (liked) return;
 		setLiked(true);
 		setLocalLikes(prev => prev + 1);
-		try {
-			await fetch('/api/like', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id }),
-			});
-		} catch (error) {
-			console.error('Failed to like:', error);
-		}
+
+		// 异步更新数据库，不影响用户体验
+		fetch('/api/like', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id }),
+		}).catch((err) => {
+			console.warn('Failed to record like count:', err);
+		});
 	};
 
 	return (

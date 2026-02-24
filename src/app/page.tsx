@@ -3,8 +3,8 @@ import { getLatestGroupNames, getPopularGroupNames, getAllCategories, getFeature
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import { CategoryCard } from '@/components/group-name/category-card';
 import { CollectionCard } from '@/components/group-name/collection-card';
-import { Input } from '@/components/ui/input';
-import { Search, TrendingUp, Clock } from 'lucide-react';
+import { SearchInput } from '@/components/search-input';
+import { TrendingUp, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -34,14 +34,7 @@ export default async function HomePage() {
 					<p className="text-lg text-gray-600 mb-8">
 						发现、复制和分享有趣的微信群名
 					</p>
-					<div className="max-w-md mx-auto sm:hidden">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-						<Input
-							type="search"
-							placeholder="搜索群名..."
-							className="pl-10"
-						/>
-					</div>
+					<SearchInput />
 				</section>
 
 				<section className="mb-12">

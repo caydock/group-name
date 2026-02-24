@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "ba40c992-b1b4-49ac-bbaf-6949d9a29fc4",
+  "id": "2541788f-4edc-44e6-a0b3-4b6d8cac84e7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "categories": {
@@ -219,47 +219,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "group_names_category_id_categories_id_fk": {
-          "name": "group_names_category_id_categories_id_fk",
-          "tableFrom": "group_names",
-          "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "group_names_user_id_users_id_fk": {
-          "name": "group_names_user_id_users_id_fk",
-          "tableFrom": "group_names",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "group_names_collection_id_collections_id_fk": {
-          "name": "group_names_collection_id_collections_id_fk",
-          "tableFrom": "group_names",
-          "tableTo": "collections",
-          "columnsFrom": [
-            "collection_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}

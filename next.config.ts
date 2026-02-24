@@ -6,15 +6,9 @@ const nextConfig: NextConfig = {
 			bodySizeLimit: "2mb",
 		},
 	},
+	// 启用 Turbopack（Next.js 16 默认启用）
 	turbopack: {},
-	webpack: (config, { isServer }) => {
-		if (isServer) {
-			config.externals.push({
-				"better-sqlite3": "commonjs better-sqlite3",
-			});
-		}
-		return config;
-	},
+	// 移除 webpack 配置，因为使用 Turbopack
 };
 
 export default nextConfig;

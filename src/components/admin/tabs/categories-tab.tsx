@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DeleteButton } from '@/components/admin/delete-button';
+import { Pencil } from 'lucide-react';
 
 interface Category {
 	id: number;
@@ -14,6 +15,7 @@ interface Category {
 export function CategoriesTab() {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [editingId, setEditingId] = useState<number | null>(null);
 	const [formData, setFormData] = useState({
 		name: '',
 		icon: '',
@@ -72,6 +74,49 @@ export function CategoriesTab() {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
+	const handleEdit = (category: Category) => {
+		setEditingId(category.id);
+		setFormData({
+			name: category.name,
+			icon: category.icon || '',
+			description: category.description || '',
+			sortOrder: category.sortOrder.toString(),
+		});
+	};
+
+	const handleUpdate = async (e: React.FormEvent, id: number) => {
+		e.preventDefault();
+		setError('');
+		setSubmitting(true);
+
+		try {
+			const res = await fetch(`/api/admin/categories/${id}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(formData),
+			});
+
+			if (!res.ok) {
+				const data = await res.json() as { error?: string };
+				throw new Error(data.error || '更新失败');
+			}
+
+			setEditingId(null);
+			setFormData({ name: '', icon: '', description: '', sortOrder: '0' });
+			loadCategories();
+		} catch (err) {
+			setError(err instanceof Error ? err.message : '更新失败，请重试');
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const handleCancelEdit = () => {
+		setEditingId(null);
+		setFormData({ name: '', icon: '', description: '', sortOrder: '0' });
+		setError('');
+	};
+
 	if (loading) {
 		return <div className="text-gray-600">加载中...</div>;
 	}
@@ -79,13 +124,13 @@ export function CategoriesTab() {
 	return (
 		<div>
 			<div className="flex items-center justify-between mb-6">
-				<h1 className="text-2xl font-bold text-gray-900">分类管理</h1>
+				<h1 className="text-2xl font-bold text-gray-900 hidden sm:block">分类管理</h1>
 				<span className="text-sm text-gray-600">
 					共 {categories.length} 个分类
 				</span>
 			</div>
 
-			<form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+			<form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 mb-6">
 				<h2 className="text-lg font-semibold text-gray-900 mb-4">添加新分类</h2>
 
 				{error && (
@@ -94,7 +139,7 @@ export function CategoriesTab() {
 					</div>
 				)}
 
-				<div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					<div>
 						<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
 							分类名称 <span className="text-red-500">*</span>
@@ -165,7 +210,7 @@ export function CategoriesTab() {
 				</div>
 			</form>
 
-			<div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+			<div className="bg-white border border-gray-200 rounded-lg overflow-hidden hidden sm:block">
 				<table className="min-w-full divide-y divide-gray-200">
 					<thead>
 						<tr>
@@ -181,7 +226,7 @@ export function CategoriesTab() {
 							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
 								排序
 							</th>
-							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-48">
 								操作
 							</th>
 						</tr>
@@ -201,19 +246,148 @@ export function CategoriesTab() {
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
 									{category.sortOrder}
 								</td>
-								<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<DeleteButton
-										action={`/api/admin/categories/${category.id}`}
-										className="text-red-600 hover:text-red-900"
-										onSuccess={loadCategories}
-									>
-										删除
-									</DeleteButton>
+								<td className="px-6 py-4 text-right text-sm font-medium w-48">
+									<div className="flex justify-end gap-2 flex-wrap">
+										{editingId === category.id ? (
+											<>
+												<button
+													onClick={handleCancelEdit}
+													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+												>
+													取消
+												</button>
+												<button
+													onClick={(e) => handleUpdate(e, category.id)}
+													className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded font-medium text-sm"
+												>
+													保存
+												</button>
+												<DeleteButton
+													action={`/api/admin/categories/${category.id}`}
+													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+													onSuccess={loadCategories}
+												>
+													删除
+												</DeleteButton>
+											</>
+										) : (
+											<button
+												onClick={() => handleEdit(category)}
+												className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+											>
+												<Pencil className="h-4 w-4" />
+												编辑
+											</button>
+										)}
+									</div>
 								</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
+			</div>
+
+			<div className="sm:hidden space-y-4">
+				{categories.map((category) => (
+					<div key={category.id} className="bg-white border border-gray-200 rounded-lg p-4">
+						{editingId === category.id ? (
+							<form onSubmit={(e) => handleUpdate(e, category.id)} className="space-y-3">
+								{error && (
+									<div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-600">
+										{error}
+									</div>
+								)}
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">图标</label>
+									<input
+										name="icon"
+										type="text"
+										value={formData.icon}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+										placeholder="😀"
+									/>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">名称</label>
+									<input
+										name="name"
+										type="text"
+										value={formData.name}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+										required
+									/>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
+									<input
+										name="description"
+										type="text"
+										value={formData.description}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									/>
+								</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-1">排序</label>
+									<input
+										name="sortOrder"
+										type="number"
+										value={formData.sortOrder}
+										onChange={handleChange}
+										className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									/>
+								</div>
+								<div className="flex gap-2">
+									<button
+										type="button"
+										onClick={handleCancelEdit}
+										className="flex-1 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md"
+									>
+										取消
+									</button>
+									<button
+										type="submit"
+										className="flex-1 px-4 py-2 border border-black bg-black text-white rounded-md disabled:bg-gray-400"
+										disabled={submitting}
+									>
+										{submitting ? '保存中...' : '保存'}
+									</button>
+								</div>
+								<DeleteButton
+									action={`/api/admin/categories/${category.id}`}
+									className="w-full px-4 py-2 border border-red-500 bg-white text-red-600 rounded-md hover:bg-red-50"
+									onSuccess={loadCategories}
+								>
+									删除
+								</DeleteButton>
+							</form>
+						) : (
+							<>
+								<div className="flex items-start gap-4 mb-3">
+									<span className="text-3xl">{category.icon}</span>
+									<div className="flex-1">
+										<h3 className="text-base font-semibold text-gray-900">{category.name}</h3>
+										{category.description && (
+											<p className="text-sm text-gray-600 mt-1">{category.description}</p>
+										)}
+									</div>
+								</div>
+								<div className="flex justify-between items-center pt-3 border-t border-gray-100">
+									<span className="text-sm text-gray-600">排序: {category.sortOrder}</span>
+									<button
+										onClick={() => handleEdit(category)}
+										className="px-5 py-2.5 border-2 border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+									>
+										<Pencil className="h-4 w-4" />
+										编辑
+									</button>
+								</div>
+							</>
+						)}
+					</div>
+				))}
 			</div>
 		</div>
 	);

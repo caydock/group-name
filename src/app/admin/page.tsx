@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { BarChart3, CheckCircle, Folder, BookOpen, LogOut } from 'lucide-react';
+import { BarChart3, CheckCircle, Folder, BookOpen, LogOut, ChevronDown } from 'lucide-react';
 import { DashboardTab } from '@/components/admin/tabs/dashboard-tab';
 import { GroupNamesTab } from '@/components/admin/tabs/group-names-tab';
 import { CategoriesTab } from '@/components/admin/tabs/categories-tab';
@@ -16,6 +16,24 @@ export default function AdminPage() {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+				setMenuOpen(false);
+			}
+		};
+
+		if (menuOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [menuOpen]);
 
 	useEffect(() => {
 		checkAuth();
@@ -58,7 +76,7 @@ export default function AdminPage() {
 
 	return (
 		<div className="min-h-screen bg-gray-50 flex">
-			<aside className="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col">
+			<aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 flex-shrink-0 flex-col">
 				<nav className="flex-1 p-4 space-y-1 overflow-auto">
 					<button
 						onClick={() => setActiveTab('dashboard')}
@@ -116,7 +134,82 @@ export default function AdminPage() {
 				</div>
 			</aside>
 
-			<main className="flex-1 overflow-auto">
+			<main className="flex-1 overflow-auto w-full">
+				<div className="lg:hidden sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
+					<div className="flex items-center justify-between">
+						<h2 className="text-lg font-semibold text-gray-900">
+							{activeTab === 'dashboard' && '数据统计'}
+							{activeTab === 'group-names' && '群名管理'}
+							{activeTab === 'categories' && '分类管理'}
+							{activeTab === 'collections' && '合集管理'}
+						</h2>
+						<div className="relative" ref={menuRef}>
+							<button
+								onClick={() => setMenuOpen(!menuOpen)}
+								className="p-2 -mr-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg flex items-center gap-1"
+							>
+								菜单
+								<ChevronDown className={`h-4 w-4 transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
+							</button>
+							{menuOpen && (
+								<div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+									<button
+										onClick={() => { setActiveTab('dashboard'); setMenuOpen(false); }}
+										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+											activeTab === 'dashboard'
+												? 'bg-indigo-50 text-indigo-700'
+												: 'text-gray-700 hover:bg-gray-100'
+										}`}
+									>
+										<BarChart3 className="h-4 w-4" />
+										数据统计
+									</button>
+									<button
+										onClick={() => { setActiveTab('group-names'); setMenuOpen(false); }}
+										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+											activeTab === 'group-names'
+												? 'bg-indigo-50 text-indigo-700'
+												: 'text-gray-700 hover:bg-gray-100'
+										}`}
+									>
+										<CheckCircle className="h-4 w-4" />
+										群名管理
+									</button>
+									<button
+										onClick={() => { setActiveTab('categories'); setMenuOpen(false); }}
+										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+											activeTab === 'categories'
+												? 'bg-indigo-50 text-indigo-700'
+												: 'text-gray-700 hover:bg-gray-100'
+										}`}
+									>
+										<Folder className="h-4 w-4" />
+										分类管理
+									</button>
+									<button
+										onClick={() => { setActiveTab('collections'); setMenuOpen(false); }}
+										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+											activeTab === 'collections'
+												? 'bg-indigo-50 text-indigo-700'
+												: 'text-gray-700 hover:bg-gray-100'
+										}`}
+									>
+										<BookOpen className="h-4 w-4" />
+										合集管理
+									</button>
+									<div className="border-t border-gray-200 my-1"></div>
+									<button
+										onClick={() => { handleLogout(); setMenuOpen(false); }}
+										className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50"
+									>
+										<LogOut className="h-4 w-4" />
+										退出登录
+									</button>
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 					{activeTab === 'dashboard' && <DashboardTab />}
 					{activeTab === 'group-names' && <GroupNamesTab />}
@@ -159,7 +252,7 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 	};
 
 	return (
-		<div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 w-full max-w-md">
+		<div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 sm:p-8 w-full max-w-md mx-4 sm:mx-0">
 			<h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
 				后台登录
 			</h1>

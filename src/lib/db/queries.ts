@@ -530,3 +530,15 @@ export async function updateGroupNameCollection(db: DB, id: number, collectionId
     .set({ collectionId, updatedAt: new Date() })
     .where(eq(groupNames.id, id));
 }
+
+export async function updateGroupName(db: DB, id: number, data: {
+  name?: string;
+  categoryId?: number | null;
+  collectionId?: number | null;
+  status?: 'pending' | 'approved' | 'rejected';
+}) {
+  await db
+    .update(groupNames)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(groupNames.id, id));
+}

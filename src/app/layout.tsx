@@ -1,14 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { ConditionalHeader } from "@/components/layout/conditional-header";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const inter = Inter({
+	variable: "--font-inter",
 	subsets: ["latin"],
 	display: "swap",
-	preload: true,
 });
 
 export const metadata: Metadata = {
@@ -77,7 +76,7 @@ export default function RootLayout({
 	return (
 		<html lang="zh-CN">
 			<body
-				className={`${geistSans.variable} antialiased`}
+				className={`${inter.variable} antialiased`}
 			>
 				<ConditionalHeader />
 				{children}

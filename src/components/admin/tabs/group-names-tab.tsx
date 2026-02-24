@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DeleteButton } from '@/components/admin/delete-button';
+import { Pencil } from 'lucide-react';
 
 interface GroupNameItem {
 	id: number;
@@ -45,6 +46,7 @@ export function GroupNamesTab() {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [collections, setCollections] = useState<Collection[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [editingId, setEditingId] = useState<number | null>(null);
 	const [total, setTotal] = useState(0);
 	const [page, setPage] = useState(1);
 	const [filters, setFilters] = useState({
@@ -53,6 +55,14 @@ export function GroupNamesTab() {
 		collectionId: '',
 		search: '',
 	});
+	const [editForm, setEditForm] = useState({
+		name: '',
+		categoryId: '',
+		collectionId: '',
+		status: 'pending' as 'pending' | 'approved' | 'rejected',
+	});
+	const [submitting, setSubmitting] = useState(false);
+	const [editError, setEditError] = useState('');
 
 	const pageSize = 20;
 
@@ -106,17 +116,68 @@ export function GroupNamesTab() {
 
 	const totalPages = Math.ceil(total / pageSize);
 
+	const handleEdit = (item: GroupNameItem) => {
+		setEditingId(item.id);
+		setEditForm({
+			name: item.name,
+			categoryId: item.category?.id?.toString() || '',
+			collectionId: item.collection?.id?.toString() || '',
+			status: item.status,
+		});
+	};
+
+	const handleUpdate = async (e: React.FormEvent, id: number) => {
+		e.preventDefault();
+		setEditError('');
+		setSubmitting(true);
+
+		try {
+			const res = await fetch(`/api/admin/group-names/${id}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					...editForm,
+					categoryId: editForm.categoryId ? parseInt(editForm.categoryId) : null,
+					collectionId: editForm.collectionId ? parseInt(editForm.collectionId) : null,
+				}),
+			});
+
+			if (!res.ok) {
+				const data = await res.json() as { error?: string };
+				throw new Error(data.error || '更新失败');
+			}
+
+			setEditingId(null);
+			setEditForm({ name: '', categoryId: '', collectionId: '', status: 'pending' });
+			loadData();
+		} catch (err) {
+			setEditError(err instanceof Error ? err.message : '更新失败，请重试');
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const handleCancelEdit = () => {
+		setEditingId(null);
+		setEditForm({ name: '', categoryId: '', collectionId: '', status: 'pending' });
+		setEditError('');
+	};
+
+	const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+		setEditForm({ ...editForm, [e.target.name]: e.target.value });
+	};
+
 	return (
 		<div>
 			<div className="flex items-center justify-between mb-6">
-				<h1 className="text-2xl font-bold text-gray-900">群名管理</h1>
+				<h1 className="text-2xl font-bold text-gray-900 hidden sm:block">群名管理</h1>
 				<span className="text-sm text-gray-600">
 					共 {total} 条
 				</span>
 			</div>
 
 			<form onSubmit={handleSearch} className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
-				<div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 					<div>
 						<label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
 							状态
@@ -206,7 +267,7 @@ export function GroupNamesTab() {
 				</div>
 			) : (
 				<>
-					<div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+					<div className="bg-white border border-gray-200 rounded-lg overflow-hidden hidden sm:block">
 						<table className="min-w-full divide-y divide-gray-200">
 							<thead>
 								<tr>
@@ -228,27 +289,227 @@ export function GroupNamesTab() {
 									<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
 										浏览/点赞/复制
 									</th>
-									<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+									<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-48">
 										操作
 									</th>
 								</tr>
 							</thead>
-							<tbody className="bg-white divide-y divide-gray-200">
-								{groupNames.map((item) => (
-									<tr key={item.id} className="hover:bg-gray-50">
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{item.id}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-											{item.name}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{item.category ? `${item.category.icon || ''} ${item.category.name}` : '-'}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{item.collection?.name || '-'}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
+					<tbody className="bg-white divide-y divide-gray-200">
+						{groupNames.map((item) => (
+							<tr key={item.id} className="hover:bg-gray-50">
+								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									{item.id}
+								</td>
+								<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+									{editingId === item.id ? (
+										<input
+											name="name"
+											type="text"
+											value={editForm.name}
+											onChange={handleEditFormChange}
+											className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+											required
+										/>
+									) : (
+										item.name
+									)}
+								</td>
+								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									{editingId === item.id ? (
+										<select
+											name="categoryId"
+											value={editForm.categoryId}
+											onChange={handleEditFormChange}
+											className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+										>
+											<option value="">无分类</option>
+											{categories.map((cat) => (
+												<option key={cat.id} value={cat.id}>{cat.name}</option>
+											))}
+										</select>
+									) : (
+										item.category ? `${item.category.icon || ''} ${item.category.name}` : '-'
+									)}
+								</td>
+								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									{editingId === item.id ? (
+										<select
+											name="collectionId"
+											value={editForm.collectionId}
+											onChange={handleEditFormChange}
+											className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+										>
+											<option value="">无合集</option>
+											{collections.map((col) => (
+												<option key={col.id} value={col.id}>{col.name}</option>
+											))}
+										</select>
+									) : (
+										item.collection?.name || '-'
+									)}
+								</td>
+								<td className="px-6 py-4 whitespace-nowrap">
+									{editingId === item.id ? (
+										<select
+											name="status"
+											value={editForm.status}
+											onChange={handleEditFormChange}
+											className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+										>
+											<option value="pending">待审核</option>
+											<option value="approved">已通过</option>
+											<option value="rejected">已拒绝</option>
+										</select>
+									) : (
+										<span className={`px-2 py-1 text-xs rounded-full ${
+											item.status === 'approved' ? 'bg-green-100 text-green-800' :
+											item.status === 'rejected' ? 'bg-red-100 text-red-800' :
+											'bg-yellow-100 text-yellow-800'
+										}`}>
+											{item.status === 'approved' ? '已通过' :
+											item.status === 'rejected' ? '已拒绝' : '待审核'}
+										</span>
+									)}
+								</td>
+								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+									{item.views}/{item.likes}/{item.copies}
+								</td>
+								<td className="px-6 py-4 text-right text-sm font-medium w-48">
+									<div className="flex justify-end gap-2 flex-wrap">
+										{editingId === item.id ? (
+											<>
+												<button
+													onClick={handleCancelEdit}
+													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+												>
+													取消
+												</button>
+												<button
+													onClick={(e) => handleUpdate(e, item.id)}
+													className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded font-medium text-sm"
+													disabled={submitting}
+												>
+													{submitting ? '保存中...' : '保存'}
+												</button>
+												<DeleteButton
+													action={`/api/admin/group-names/${item.id}`}
+													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+													onSuccess={loadData}
+												>
+													删除
+												</DeleteButton>
+											</>
+										) : (
+											<button
+												onClick={() => handleEdit(item)}
+												className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+											>
+												<Pencil className="h-4 w-4" />
+												编辑
+											</button>
+										)}
+									</div>
+								</td>
+							</tr>
+						))}
+					</tbody>
+						</table>
+					</div>
+
+					<div className="sm:hidden space-y-4">
+						{groupNames.map((item) => (
+							<div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4">
+								{editingId === item.id ? (
+									<form onSubmit={(e) => handleUpdate(e, item.id)} className="space-y-3">
+										{editError && (
+											<div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-600">
+												{editError}
+											</div>
+										)}
+										<div className="text-xs text-gray-500">ID: {item.id}</div>
+										<div>
+											<label className="block text-sm font-medium text-gray-700 mb-1">群名</label>
+											<input
+												name="name"
+												type="text"
+												value={editForm.name}
+												onChange={handleEditFormChange}
+												className="w-full px-3 py-2 border border-gray-300 rounded-md"
+												required
+											/>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-gray-700 mb-1">分类</label>
+											<select
+												name="categoryId"
+												value={editForm.categoryId}
+												onChange={handleEditFormChange}
+												className="w-full px-3 py-2 border border-gray-300 rounded-md"
+											>
+												<option value="">无分类</option>
+												{categories.map((cat) => (
+													<option key={cat.id} value={cat.id}>{cat.name}</option>
+												))}
+											</select>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-gray-700 mb-1">合集</label>
+											<select
+												name="collectionId"
+												value={editForm.collectionId}
+												onChange={handleEditFormChange}
+												className="w-full px-3 py-2 border border-gray-300 rounded-md"
+											>
+												<option value="">无合集</option>
+												{collections.map((col) => (
+													<option key={col.id} value={col.id}>{col.name}</option>
+												))}
+											</select>
+										</div>
+										<div>
+											<label className="block text-sm font-medium text-gray-700 mb-1">状态</label>
+											<select
+												name="status"
+												value={editForm.status}
+												onChange={handleEditFormChange}
+												className="w-full px-3 py-2 border border-gray-300 rounded-md"
+											>
+												<option value="pending">待审核</option>
+												<option value="approved">已通过</option>
+												<option value="rejected">已拒绝</option>
+											</select>
+										</div>
+										<div className="flex gap-2">
+											<button
+												type="button"
+												onClick={handleCancelEdit}
+												className="flex-1 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md"
+											>
+												取消
+											</button>
+											<button
+												type="submit"
+												className="flex-1 px-4 py-2 border border-black bg-black text-white rounded-md disabled:bg-gray-400"
+												disabled={submitting}
+											>
+												{submitting ? '保存中...' : '保存'}
+											</button>
+										</div>
+										<DeleteButton
+											action={`/api/admin/group-names/${item.id}`}
+											className="w-full px-4 py-2 border border-red-500 bg-white text-red-600 rounded-md hover:bg-red-50"
+											onSuccess={loadData}
+										>
+											删除
+										</DeleteButton>
+									</form>
+								) : (
+									<>
+										<div className="flex justify-between items-start mb-3">
+											<div>
+												<div className="text-xs text-gray-500 mb-1">ID: {item.id}</div>
+												<h3 className="text-base font-semibold text-gray-900">{item.name}</h3>
+											</div>
 											<span className={`px-2 py-1 text-xs rounded-full ${
 												item.status === 'approved' ? 'bg-green-100 text-green-800' :
 												item.status === 'rejected' ? 'bg-red-100 text-red-800' :
@@ -257,23 +518,34 @@ export function GroupNamesTab() {
 												{item.status === 'approved' ? '已通过' :
 												item.status === 'rejected' ? '已拒绝' : '待审核'}
 											</span>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-											{item.views}/{item.likes}/{item.copies}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-											<DeleteButton
-												action={`/api/admin/group-names/${item.id}`}
-												className="text-red-600 hover:text-red-900"
-												onSuccess={loadData}
+										</div>
+										<div className="space-y-2 text-sm">
+											<div className="flex justify-between">
+												<span className="text-gray-600">分类:</span>
+												<span className="text-gray-900">{item.category ? `${item.category.icon || ''} ${item.category.name}` : '-'}</span>
+											</div>
+											<div className="flex justify-between">
+												<span className="text-gray-600">合集:</span>
+												<span className="text-gray-900">{item.collection?.name || '-'}</span>
+											</div>
+											<div className="flex justify-between">
+												<span className="text-gray-600">浏览/点赞/复制:</span>
+												<span className="text-gray-900">{item.views}/{item.likes}/{item.copies}</span>
+											</div>
+										</div>
+										<div className="mt-4 pt-4 border-t border-gray-100">
+											<button
+												onClick={() => handleEdit(item)}
+												className="w-full text-center px-4 py-3 border-2 border-black bg-black text-white hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center gap-1 font-medium text-base"
 											>
-												删除
-											</DeleteButton>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+												<Pencil className="h-5 w-5" />
+												编辑
+											</button>
+										</div>
+									</>
+								)}
+							</div>
+						))}
 					</div>
 
 					{total > pageSize && (

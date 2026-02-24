@@ -30,9 +30,9 @@ export const collections = sqliteTable('collections', {
 export const groupNames = sqliteTable('group_names', {
   id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
-  categoryId: integer('category_id').references(() => categories.id),
-  userId: text('user_id').references(() => users.id),
-  collectionId: integer('collection_id').references(() => collections.id),
+  categoryId: integer('category_id'),
+  userId: text('user_id'),
+  collectionId: integer('collection_id'),
   views: integer('views').notNull().default(0),
   likes: integer('likes').notNull().default(0),
   copies: integer('copies').notNull().default(0),

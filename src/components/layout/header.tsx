@@ -44,11 +44,12 @@ export function Header() {
 						</nav>
 						<div className="flex items-center gap-3">
 							<div className="relative hidden sm:block">
-								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
 								<Input
 									type="search"
 									placeholder="搜索群名..."
 									className="pl-10 w-64"
+									suppressHydrationWarning
 								/>
 							</div>
 							<button
@@ -85,11 +86,12 @@ export function Header() {
 							提交群名
 						</Link>
 						<div className="relative pt-2">
-							<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+							<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
 							<Input
 								type="search"
 								placeholder="搜索群名..."
 								className="pl-10 w-full"
+								suppressHydrationWarning
 							/>
 						</div>
 					</nav>
