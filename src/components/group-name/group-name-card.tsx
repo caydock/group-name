@@ -28,26 +28,15 @@ export function GroupNameCard({
 
 	const handleCopy = async (e: React.MouseEvent) => {
 		e.stopPropagation();
-		// 检查 navigator.clipboard 是否可用
 		if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
 			try {
 				await navigator.clipboard.writeText(name);
 				setCopied(true);
 				setTimeout(() => setCopied(false), 2000);
-
-				// 异步更新数据库，不影响用户体验
-				fetch('/api/copy', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ id }),
-				}).catch((err) => {
-					console.warn('Failed to record copy count:', err);
-				});
 			} catch (error) {
 				console.error('Failed to copy:', error);
 			}
 		} else {
-			// 使用降级方案：execCommand
 			try {
 				const textArea = document.createElement('textarea');
 				textArea.value = name;

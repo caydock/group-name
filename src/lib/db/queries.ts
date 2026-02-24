@@ -77,7 +77,7 @@ export async function getPopularGroupNames(db: DB, limit: number = 12) {
     .from(groupNames)
     .leftJoin(categories, eq(groupNames.categoryId, categories.id))
     .where(eq(groupNames.status, 'approved'))
-    .orderBy(desc(groupNames.views))
+    .orderBy(desc(groupNames.likes))
     .limit(limit)) as any[];
 }
 
@@ -105,7 +105,7 @@ export async function getPopularGroupNamesPaginated(
       .from(groupNames)
       .leftJoin(categories, eq(groupNames.categoryId, categories.id))
       .where(eq(groupNames.status, 'approved'))
-      .orderBy(desc(groupNames.views))
+      .orderBy(desc(groupNames.likes))
       .limit(pageSize)
       .offset(offset),
     db
@@ -176,7 +176,7 @@ export async function searchGroupNames(db: DB, query: string, limit: number = 20
       eq(groupNames.status, 'approved'),
       like(groupNames.name, `%${query}%`)
     ))
-    .orderBy(desc(groupNames.views))
+    .orderBy(desc(groupNames.likes))
     .limit(limit);
 }
 

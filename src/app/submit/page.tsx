@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
 	title: '提交群名 ',
-	description: '分享您发现或创造的有趣群名，与大家分享您的创意，丰富群名大全',
+	description: '分享您发现或创造的有趣群名，与大家分享您的创意，丰富群名小岛',
 	keywords: '提交群名,群名投稿,分享群名,原创群名',
 };
 

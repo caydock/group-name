@@ -12,13 +12,13 @@ const inter = Inter({
 
 export const metadata: Metadata = {
 	title: {
-		default: "群名大全 - 有趣的微信群名",
-		template: "%s | 群名大全"
+		default: "群名小岛 - 有趣的群名",
+		template: "%s | 群名小岛"
 	},
-	description: "发现有趣的微信群名，支持复制和分类浏览，创建您的群名合集。搞笑、文艺、商务、家庭、校园、游戏等各种分类等你来探索。",
-	keywords: ["微信群名", "群名大全", "搞笑群名", "群名生成", "群名推荐", "微信聊天群", "群聊名称"],
-	authors: [{ name: "群名大全" }],
-	creator: "群名大全",
+	description: "发现有趣的群名，支持复制和分类浏览，创建您的群名合集。搞笑、文艺、商务、家庭、校园、游戏等各种分类等你来探索。",
+	keywords: ["群名", "群名小岛", "搞笑群名", "群名生成", "群名推荐", "群聊名称"],
+	authors: [{ name: "群名小岛" }],
+	creator: "群名小岛",
 	icons: {
 		icon: [
 			{ url: '/images/favicon-16x16.jpg', sizes: '16x16', type: 'image/jpeg' },
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
 		type: "website",
 		locale: "zh_CN",
 		url: "https://group-name.com",
-		title: "群名大全 - 有趣的微信群名",
-		description: "发现有趣的微信群名，支持复制和分类浏览",
-		siteName: "群名大全",
+		title: "群名小岛 - 有趣的群名",
+		description: "发现有趣的群名，支持复制和分类浏览",
+		siteName: "群名小岛",
 		images: [
 			{
 				url: '/images/logo-256x256.jpg',
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary",
-		title: "群名大全 - 有趣的微信群名",
-		description: "发现有趣的微信群名，支持复制和分类浏览",
+		title: "群名小岛 - 有趣的群名",
+		description: "发现有趣的群名，支持复制和分类浏览",
 		images: ['/images/logo-256x256.jpg'],
 	},
 	robots: {

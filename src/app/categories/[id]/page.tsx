@@ -22,9 +22,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 	}
 
 	return {
-		title: `${category.name}群名大全`,
+		title: `${category.name}群名`,
 		description: category.description || `查看${category.name}分类下的所有群名`,
-		keywords: `${category.name},群名,微信群名,QQ群名,${category.name}群名`,
+		keywords: `${category.name},群名,${category.name}群名`,
 	};
 }
 
