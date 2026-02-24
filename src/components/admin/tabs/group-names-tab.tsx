@@ -68,6 +68,14 @@ export function GroupNamesTab() {
 	});
 	const [submitting, setSubmitting] = useState(false);
 	const [editError, setEditError] = useState('');
+	const [showAddForm, setShowAddForm] = useState(false);
+	const [addForm, setAddForm] = useState({
+		name: '',
+		categoryId: '',
+		collectionId: '',
+	});
+	const [addSubmitting, setAddSubmitting] = useState(false);
+	const [addError, setAddError] = useState('');
 
 	const pageSize = 20;
 
@@ -172,6 +180,43 @@ export function GroupNamesTab() {
 		setEditForm({ ...editForm, [e.target.name]: e.target.value });
 	};
 
+	const handleAddSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setAddError('');
+		setAddSubmitting(true);
+
+		try {
+			const res = await fetch('/api/admin/group-names', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(addForm),
+			});
+
+			if (!res.ok) {
+				const data = await res.json() as { error?: string };
+				throw new Error(data.error || '添加失败');
+			}
+
+			setAddForm({ name: '', categoryId: '', collectionId: '' });
+			setShowAddForm(false);
+			loadData();
+		} catch (err) {
+			setAddError(err instanceof Error ? err.message : '添加失败，请重试');
+		} finally {
+			setAddSubmitting(false);
+		}
+	};
+
+	const handleAddFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+		setAddForm({ ...addForm, [e.target.name]: e.target.value });
+	};
+
+	const handleCancelAdd = () => {
+		setAddForm({ name: '', categoryId: '', collectionId: '' });
+		setAddError('');
+		setShowAddForm(false);
+	};
+
 	return (
 		<div>
 			<div className="flex items-center justify-between mb-6">
@@ -254,6 +299,93 @@ export function GroupNamesTab() {
 					</form>
 				</CardContent>
 			</Card>
+
+			{!showAddForm && (
+				<div className="mb-6">
+					<Button onClick={() => setShowAddForm(true)}>添加群名</Button>
+				</div>
+			)}
+
+			{showAddForm && (
+				<Card className="mb-6">
+					<CardContent className="pt-6">
+						<h2 className="text-lg font-semibold text-foreground mb-4">添加新群名</h2>
+
+						{addError && (
+							<div className="bg-destructive/10 border border-destructive/20 rounded-md p-3 text-sm text-destructive mb-4">
+								{addError}
+							</div>
+						)}
+
+						<form onSubmit={handleAddSubmit} className="space-y-4">
+							<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+								<div>
+									<label htmlFor="addName" className="block text-sm font-medium text-foreground mb-1">
+										群名 <span className="text-destructive">*</span>
+									</label>
+									<Input
+										id="addName"
+										name="name"
+										value={addForm.name}
+										onChange={handleAddFormChange}
+										placeholder="请输入群名"
+										required
+									/>
+								</div>
+								<div>
+									<label htmlFor="addCategoryId" className="block text-sm font-medium text-foreground mb-1">
+										分类
+									</label>
+									<Select value={addForm.categoryId || 'none'} onValueChange={(value) => setAddForm({ ...addForm, categoryId: value === 'none' ? '' : value })}>
+										<SelectTrigger>
+											<SelectValue placeholder="无分类" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="none">无分类</SelectItem>
+											{categories.map((cat) => (
+												<SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
+								<div>
+									<label htmlFor="addCollectionId" className="block text-sm font-medium text-foreground mb-1">
+										合集
+									</label>
+									<Select value={addForm.collectionId || 'none'} onValueChange={(value) => setAddForm({ ...addForm, collectionId: value === 'none' ? '' : value })}>
+										<SelectTrigger>
+											<SelectValue placeholder="无合集" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="none">无合集</SelectItem>
+											{collections.map((col) => (
+												<SelectItem key={col.id} value={col.id.toString()}>{col.name}</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
+							<div className="flex gap-2">
+								<Button
+									type="button"
+									variant="outline"
+									onClick={handleCancelAdd}
+								>
+									取消
+								</Button>
+								<Button
+									type="submit"
+									variant="outline"
+									className="bg-orange-500 text-white hover:bg-orange-600"
+									disabled={addSubmitting}
+								>
+									{addSubmitting ? '添加中...' : '添加'}
+								</Button>
+							</div>
+						</form>
+					</CardContent>
+				</Card>
+			)}
 
 			{loading ? (
 				<div className="text-center py-12 text-muted-foreground">加载中...</div>
@@ -353,54 +485,6 @@ export function GroupNamesTab() {
 												item.collection?.name || '-'
 											)}
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-											{editingId === item.id ? (
-												<input
-													name="name"
-													type="text"
-													value={editForm.name}
-													onChange={handleEditFormChange}
-													className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-													required
-												/>
-											) : (
-												item.name
-											)}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{editingId === item.id ? (
-												<select
-													name="categoryId"
-													value={editForm.categoryId}
-													onChange={handleEditFormChange}
-													className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-												>
-													<option value="">无分类</option>
-													{categories.map((cat) => (
-														<option key={cat.id} value={cat.id}>{cat.name}</option>
-													))}
-												</select>
-											) : (
-												item.category ? `${item.category.icon || ''} ${item.category.name}` : '-'
-											)}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{editingId === item.id ? (
-												<select
-													name="collectionId"
-													value={editForm.collectionId}
-													onChange={handleEditFormChange}
-													className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-												>
-													<option value="">无合集</option>
-													{collections.map((col) => (
-														<option key={col.id} value={col.id}>{col.name}</option>
-													))}
-												</select>
-											) : (
-												item.collection?.name || '-'
-											)}
-										</td>
 										<td className="px-6 py-4 whitespace-nowrap">
 											{editingId === item.id ? (
 												<Select
@@ -431,9 +515,9 @@ export function GroupNamesTab() {
 											{item.views}/{item.likes}/{item.copies}
 										</td>
 										<td className="px-6 py-4 text-right text-sm font-medium w-48">
-											<div className="flex justify-end gap-2 flex-wrap">
+											<div className="flex justify-end">
 												{editingId === item.id ? (
-													<>
+													<div className="flex flex-col gap-2">
 														<Button
 															variant="outline"
 															size="sm"
@@ -446,6 +530,7 @@ export function GroupNamesTab() {
 															size="sm"
 															onClick={(e) => handleUpdate(e, item.id)}
 															disabled={submitting}
+															className="bg-orange-500 text-white hover:bg-orange-600"
 														>
 															{submitting ? '保存中...' : '保存'}
 														</Button>
@@ -455,9 +540,10 @@ export function GroupNamesTab() {
 														>
 															删除
 														</DeleteButton>
-													</>
+													</div>
 												) : (
 													<Button
+														variant="outline"
 														size="sm"
 														onClick={() => handleEdit(item)}
 													>
@@ -549,7 +635,7 @@ export function GroupNamesTab() {
 											<Button
 												type="submit"
 												variant="outline"
-												className="flex-1"
+												className="flex-1 bg-orange-500 text-white hover:bg-orange-600"
 												disabled={submitting}
 											>
 												{submitting ? '保存中...' : '保存'}
@@ -595,6 +681,7 @@ export function GroupNamesTab() {
 										</div>
 										<div className="mt-4 pt-4 border-t border-border">
 											<Button
+												variant="outline"
 												onClick={() => handleEdit(item)}
 												className="w-full"
 											>

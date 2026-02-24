@@ -16,7 +16,13 @@ export default function AdminPage() {
 	const router = useRouter();
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+	const [activeTab, setActiveTab] = useState<Tab>(() => {
+		if (typeof window !== 'undefined') {
+			const saved = localStorage.getItem('adminActiveTab');
+			return (saved as Tab) || 'dashboard';
+		}
+		return 'dashboard';
+	});
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +65,13 @@ export default function AdminPage() {
 		router.push('/');
 	};
 
+	const handleTabChange = (tab: Tab) => {
+		setActiveTab(tab);
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('adminActiveTab', tab);
+		}
+	};
+
 	if (isLoading) {
 		return (
 			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -80,7 +93,7 @@ export default function AdminPage() {
 			<aside className="hidden lg:flex w-64 bg-white border-r border-gray-200 flex-shrink-0 flex-col">
 				<nav className="flex-1 p-4 space-y-1 overflow-auto">
 					<button
-						onClick={() => setActiveTab('dashboard')}
+						onClick={() => handleTabChange('dashboard')}
 						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
 							activeTab === 'dashboard'
 								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
@@ -91,7 +104,7 @@ export default function AdminPage() {
 						数据统计
 					</button>
 					<button
-						onClick={() => setActiveTab('group-names')}
+						onClick={() => handleTabChange('group-names')}
 						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
 							activeTab === 'group-names'
 								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
@@ -102,7 +115,7 @@ export default function AdminPage() {
 						群名管理
 					</button>
 					<button
-						onClick={() => setActiveTab('categories')}
+						onClick={() => handleTabChange('categories')}
 						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
 							activeTab === 'categories'
 								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
@@ -113,7 +126,7 @@ export default function AdminPage() {
 						分类管理
 					</button>
 					<button
-						onClick={() => setActiveTab('collections')}
+						onClick={() => handleTabChange('collections')}
 						className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
 							activeTab === 'collections'
 								? 'bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200'
@@ -155,7 +168,7 @@ export default function AdminPage() {
 							{menuOpen && (
 								<div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
 									<button
-										onClick={() => { setActiveTab('dashboard'); setMenuOpen(false); }}
+										onClick={() => { handleTabChange('dashboard'); setMenuOpen(false); }}
 										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
 											activeTab === 'dashboard'
 												? 'bg-indigo-50 text-indigo-700'
@@ -166,7 +179,7 @@ export default function AdminPage() {
 										数据统计
 									</button>
 									<button
-										onClick={() => { setActiveTab('group-names'); setMenuOpen(false); }}
+										onClick={() => { handleTabChange('group-names'); setMenuOpen(false); }}
 										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
 											activeTab === 'group-names'
 												? 'bg-indigo-50 text-indigo-700'
@@ -177,7 +190,7 @@ export default function AdminPage() {
 										群名管理
 									</button>
 									<button
-										onClick={() => { setActiveTab('categories'); setMenuOpen(false); }}
+										onClick={() => { handleTabChange('categories'); setMenuOpen(false); }}
 										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
 											activeTab === 'categories'
 												? 'bg-indigo-50 text-indigo-700'
@@ -188,7 +201,7 @@ export default function AdminPage() {
 										分类管理
 									</button>
 									<button
-										onClick={() => { setActiveTab('collections'); setMenuOpen(false); }}
+										onClick={() => { handleTabChange('collections'); setMenuOpen(false); }}
 										className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
 											activeTab === 'collections'
 												? 'bg-indigo-50 text-indigo-700'
@@ -280,7 +293,7 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 					</div>
 				)}
 
-				<Button type="submit" className="w-full" disabled={loading}>
+				<Button type="submit" variant="outline" className="w-full" disabled={loading}>
 					{loading ? '登录中...' : '登录'}
 				</Button>
 			</form>

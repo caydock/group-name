@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import { DeleteButton } from '@/components/admin/delete-button';
 import { Pencil } from 'lucide-react';
 
@@ -117,18 +118,6 @@ export function CategoriesTab() {
 		setError('');
 	};
 
-	const buttonWhiteBlack = {
-		backgroundColor: '#ffffff',
-		borderColor: '#000000',
-		color: '#000000',
-	};
-
-	const buttonWhiteGray = {
-		backgroundColor: '#ffffff',
-		borderColor: '#e5e7eb',
-		color: '#374151',
-	};
-
 	if (loading) {
 		return <div className="text-gray-600">加载中...</div>;
 	}
@@ -212,13 +201,13 @@ export function CategoriesTab() {
 				</div>
 
 				<div className="mt-4">
-					<button
+					<Button
 						type="submit"
-						className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+						variant="outline"
 						disabled={submitting}
 					>
 						{submitting ? '添加中...' : '添加分类'}
-					</button>
+					</Button>
 				</div>
 			</form>
 
@@ -259,40 +248,41 @@ export function CategoriesTab() {
 									{category.sortOrder}
 								</td>
 								<td className="px-6 py-4 text-right text-sm font-medium w-48">
-									<div className="flex justify-end gap-2 flex-wrap">
+									<div className="flex justify-end">
 										{editingId === category.id ? (
-											<>
-												<button
+											<div className="flex flex-col gap-2">
+												<Button
+													variant="outline"
+													size="sm"
 													onClick={handleCancelEdit}
-													className="px-3 py-1.5 border rounded text-sm hover:opacity-80 transition-opacity"
-													style={buttonWhiteGray}
 												>
 													取消
-												</button>
-												<button
+												</Button>
+												<Button
+													variant="outline"
+													size="sm"
 													onClick={(e) => handleUpdate(e, category.id)}
-													className="px-3 py-1.5 border rounded font-medium text-sm hover:opacity-80 transition-opacity"
-													style={buttonWhiteBlack}
+													disabled={submitting}
+													className="bg-orange-500 text-white hover:bg-orange-600"
 												>
-													保存
-												</button>
+													{submitting ? '保存中...' : '保存'}
+												</Button>
 												<DeleteButton
 													action={`/api/admin/categories/${category.id}`}
-													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
 													onSuccess={loadCategories}
 												>
 													删除
 												</DeleteButton>
-											</>
+											</div>
 										) : (
-											<button
+											<Button
+												variant="outline"
+												size="sm"
 												onClick={() => handleEdit(category)}
-												className="px-3 py-1.5 border rounded flex items-center gap-1 font-medium text-sm hover:opacity-80 transition-opacity"
-												style={buttonWhiteBlack}
 											>
 												<Pencil className="h-4 w-4" />
 												编辑
-											</button>
+											</Button>
 										)}
 									</div>
 								</td>
@@ -355,25 +345,26 @@ export function CategoriesTab() {
 									/>
 								</div>
 								<div className="flex gap-2">
-									<button
+									<Button
 										type="button"
+										variant="outline"
 										onClick={handleCancelEdit}
-										className="flex-1 px-4 py-2 border rounded-md hover:opacity-80 transition-opacity"
-										style={buttonWhiteGray}
+										className="flex-1"
 									>
 										取消
-									</button>
-									<button
+									</Button>
+									<Button
 										type="submit"
-										className="flex-1 px-4 py-2 border rounded-md hover:opacity-80 transition-opacity"
-										style={buttonWhiteBlack}
+										variant="outline"
+										className="flex-1 bg-orange-500 text-white hover:bg-orange-600"
+										disabled={submitting}
 									>
 										{submitting ? '保存中...' : '保存'}
-									</button>
+									</Button>
 								</div>
 								<DeleteButton
 									action={`/api/admin/categories/${category.id}`}
-									className="w-full px-4 py-2 border border-red-500 bg-white text-red-600 rounded-md hover:bg-red-50"
+									className="w-full"
 									onSuccess={loadCategories}
 								>
 									删除
@@ -392,14 +383,13 @@ export function CategoriesTab() {
 								</div>
 								<div className="flex justify-between items-center pt-3 border-t border-gray-100">
 									<span className="text-sm text-gray-600">排序: {category.sortOrder}</span>
-									<button
+									<Button
+										variant="outline"
 										onClick={() => handleEdit(category)}
-										className="px-5 py-2.5 border-2 rounded flex items-center gap-1 font-medium text-sm hover:opacity-80 transition-opacity"
-										style={buttonWhiteBlack}
 									>
 										<Pencil className="h-4 w-4" />
 										编辑
-									</button>
+									</Button>
 								</div>
 							</>
 						)}

@@ -48,10 +48,9 @@ export function DeleteButton({ action, children, className, onSuccess }: DeleteB
 	return (
 		<>
 			<Button
-				variant="destructive"
 				onClick={() => setIsDialogOpen(true)}
 				disabled={isSubmitting}
-				className={className}
+				className={`${className} bg-red-600 text-white hover:bg-red-700`}
 			>
 				{children}
 			</Button>
@@ -77,9 +76,9 @@ export function DeleteButton({ action, children, className, onSuccess }: DeleteB
 							取消
 						</Button>
 						<Button
-							variant="destructive"
 							onClick={handleDelete}
 							disabled={isSubmitting}
+							className="bg-red-600 text-white hover:bg-red-700"
 						>
 							{isSubmitting ? '删除中...' : '确认删除'}
 						</Button>
