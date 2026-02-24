@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: "website",
 		locale: "zh_CN",
-		url: "https://group-name.com",
+		url: "https://qunming.caydock.com",
 		title: "群名小岛 - 有趣的群名",
 		description: "发现有趣的群名，支持复制和分类浏览",
 		siteName: "群名小岛",
