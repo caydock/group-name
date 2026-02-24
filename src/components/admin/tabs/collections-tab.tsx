@@ -125,6 +125,18 @@ export function CollectionsTab() {
 		setError('');
 	};
 
+	const buttonWhiteBlack = {
+		backgroundColor: '#ffffff',
+		borderColor: '#000000',
+		color: '#000000',
+	};
+
+	const buttonWhiteGray = {
+		backgroundColor: '#ffffff',
+		borderColor: '#e5e7eb',
+		color: '#374151',
+	};
+
 	if (loading) {
 		return <div className="text-gray-600">加载中...</div>;
 	}
@@ -285,13 +297,15 @@ export function CollectionsTab() {
 											<>
 												<button
 													onClick={handleCancelEdit}
-													className="px-3 py-1.5 border border-gray-400 bg-white text-gray-700 hover:bg-gray-100 rounded text-sm"
+													className="px-3 py-1.5 border rounded text-sm hover:opacity-80 transition-opacity"
+													style={buttonWhiteGray}
 												>
 													取消
 												</button>
 												<button
 													onClick={(e) => handleUpdate(e, collection.id)}
-													className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded font-medium text-sm"
+													className="px-3 py-1.5 border rounded font-medium text-sm hover:opacity-80 transition-opacity"
+													style={buttonWhiteBlack}
 												>
 													保存
 												</button>
@@ -306,7 +320,8 @@ export function CollectionsTab() {
 										) : (
 											<button
 												onClick={() => handleEdit(collection)}
-												className="px-3 py-1.5 border border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+												className="px-3 py-1.5 border rounded flex items-center gap-1 font-medium text-sm hover:opacity-80 transition-opacity"
+												style={buttonWhiteBlack}
 											>
 												<Pencil className="h-4 w-4" />
 												编辑
@@ -385,13 +400,15 @@ export function CollectionsTab() {
 									<button
 										type="button"
 										onClick={handleCancelEdit}
-										className="flex-1 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md"
+										className="flex-1 px-4 py-2 border rounded-md hover:opacity-80 transition-opacity"
+										style={buttonWhiteGray}
 									>
 										取消
 									</button>
 									<button
 										type="submit"
-										className="flex-1 px-4 py-2 border border-black bg-black text-white rounded-md disabled:bg-gray-400"
+										className="flex-1 px-4 py-2 border rounded-md hover:opacity-80 transition-opacity"
+										style={buttonWhiteBlack}
 										disabled={submitting}
 									>
 										{submitting ? '保存中...' : '保存'}
@@ -425,7 +442,8 @@ export function CollectionsTab() {
 									<span className="text-sm text-gray-600">排序: {collection.sortOrder}</span>
 									<button
 										onClick={() => handleEdit(collection)}
-										className="px-5 py-2.5 border-2 border-black bg-black text-white hover:bg-gray-800 rounded flex items-center gap-1 font-medium text-sm"
+										className="px-5 py-2.5 border rounded flex items-center gap-1 font-medium text-sm hover:opacity-80 transition-opacity"
+										style={buttonWhiteBlack}
 									>
 										<Pencil className="h-4 w-4" />
 										编辑

@@ -67,7 +67,7 @@ export function Header() {
 				</div>
 			</div>
 			{mobileMenuOpen && (
-				<div className="md:hidden border-t border-gray-200 bg-white">
+				<div className="md:hidden border-t border-border bg-card">
 					<nav className="px-4 py-4 space-y-3">
 						<Link href="/" className="flex items-center text-gray-600 hover:text-gray-900 py-2">
 							<Home className="h-4 w-4 mr-2" />

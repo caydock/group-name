@@ -100,7 +100,7 @@ export function PendingGroupNamesTable({ groupNames }: PendingGroupNamesTablePro
 								<span className="text-gray-900">{new Date(item.createdAt).toLocaleString('zh-CN')}</span>
 							</div>
 						</div>
-						<div className="mt-4 pt-4 border-t border-gray-200">
+						<div className="mt-4 pt-4 border-t border-border">
 							<ReviewActions id={item.id} />
 						</div>
 					</div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatCard } from '@/components/admin/stat-card';
 import { PendingGroupNamesTable } from '@/components/admin/pending-group-names-table';
 
@@ -58,7 +59,7 @@ export function DashboardTab() {
 
 	return (
 		<div>
-			<h1 className="text-2xl font-bold text-gray-900 mb-6 hidden sm:block">数据统计</h1>
+			<h1 className="text-2xl font-bold text-foreground mb-6 hidden sm:block">数据统计</h1>
 
 			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 				<StatCard
@@ -86,20 +87,22 @@ export function DashboardTab() {
 			</div>
 
 			{pendingResult.data.length > 0 && (
-				<div className="bg-white border border-gray-200 rounded-lg p-6">
-					<h2 className="text-lg font-semibold text-gray-900 mb-4">
-						待审核群名
-					</h2>
-					<PendingGroupNamesTable groupNames={pendingResult.data} />
-					{pendingResult.total > pendingResult.pageSize && (
-						<button
-							onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'group-names' }))}
-							className="inline-flex items-center mt-4 text-sm text-blue-600 hover:text-blue-800"
-						>
-							查看全部 {pendingResult.total} 条待审核 →
-						</button>
-					)}
-				</div>
+				<Card>
+					<CardHeader>
+						<CardTitle>待审核群名</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<PendingGroupNamesTable groupNames={pendingResult.data} />
+						{pendingResult.total > pendingResult.pageSize && (
+							<button
+								onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'group-names' }))}
+								className="inline-flex items-center mt-4 text-sm text-primary hover:underline"
+							>
+								查看全部 {pendingResult.total} 条待审核 →
+							</button>
+						)}
+					</CardContent>
+				</Card>
 			)}
 		</div>
 	);
