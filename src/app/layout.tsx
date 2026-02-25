@@ -11,6 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://qunming.caydock.com"),
 	title: {
 		default: "群名小岛 - 有趣的群名",
 		template: "%s | 群名小岛"
