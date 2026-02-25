@@ -3,7 +3,6 @@ import { getLatestGroupNames, getPopularGroupNames, getAllCategories, getFeature
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import { CategoryCard } from '@/components/group-name/category-card';
 import { CollectionCard } from '@/components/group-name/collection-card';
-import { SearchInput } from '@/components/search-input';
 import { TrendingUp, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -33,10 +32,9 @@ export default async function HomePage() {
 					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
 						🏝️ 发现有趣好玩的群聊名称
 					</h1>
-					<p className="text-lg text-gray-600 mb-8">
+					<p className="text-lg text-gray-600">
 						发现、复制和分享有趣的群名
 					</p>
-					<SearchInput />
 				</section>
 
 				<section className="mb-12">
@@ -129,30 +127,6 @@ export default async function HomePage() {
 					</section>
 				)}
 			</main>
-
-			<footer className="border-t border-border mt-12">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-					<div className="flex flex-col md:flex-row items-center justify-between gap-4">
-						<p className="text-gray-600 text-sm">
-							© 2025 群名小岛. 保留所有权利.
-						</p>
-						<div className="flex items-center gap-6 text-sm text-gray-600">
-							<Link href="/terms" className="hover:text-gray-900">
-								服务条款
-							</Link>
-							<Link href="/privacy" className="hover:text-gray-900">
-								隐私政策
-							</Link>
-							<Link href="/disclaimer" className="hover:text-gray-900">
-								免责声明
-							</Link>
-							<Link href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900">
-								站点地图
-							</Link>
-						</div>
-					</div>
-				</div>
-			</footer>
 		</div>
 	);
 }

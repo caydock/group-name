@@ -2,8 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, Menu, X, Home, Folder, Layers, Plus } from 'lucide-react';
+import { Menu, X, Home, Folder, Layers, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -43,15 +42,6 @@ export function Header() {
 							</Link>
 						</nav>
 						<div className="flex items-center gap-3">
-							<div className="relative hidden sm:block">
-								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-								<Input
-									type="search"
-									placeholder="搜索群名..."
-									className="pl-10 w-64"
-									suppressHydrationWarning
-								/>
-							</div>
 							<button
 								onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
 								className="md:hidden p-2 rounded-md hover:bg-gray-100"
@@ -69,31 +59,38 @@ export function Header() {
 			{mobileMenuOpen && (
 				<div className="md:hidden border-t border-border bg-card">
 					<nav className="px-4 py-4 space-y-3">
-						<Link href="/" className="flex items-center text-gray-600 hover:text-gray-900 py-2">
+						<Link
+							href="/"
+							onClick={() => setMobileMenuOpen(false)}
+							className="flex items-center text-gray-600 hover:text-gray-900 py-2"
+						>
 							<Home className="h-4 w-4 mr-2" />
 							首页
 						</Link>
-						<Link href="/categories" className="flex items-center text-gray-600 hover:text-gray-900 py-2">
+						<Link
+							href="/categories"
+							onClick={() => setMobileMenuOpen(false)}
+							className="flex items-center text-gray-600 hover:text-gray-900 py-2"
+						>
 							<Folder className="h-4 w-4 mr-2" />
 							分类
 						</Link>
-						<Link href="/collections" className="flex items-center text-gray-600 hover:text-gray-900 py-2">
+						<Link
+							href="/collections"
+							onClick={() => setMobileMenuOpen(false)}
+							className="flex items-center text-gray-600 hover:text-gray-900 py-2"
+						>
 							<Layers className="h-4 w-4 mr-2" />
 							合集
 						</Link>
-						<Link href="/submit" className="flex items-center text-gray-600 hover:text-gray-900 py-2">
+						<Link
+							href="/submit"
+							onClick={() => setMobileMenuOpen(false)}
+							className="flex items-center text-gray-600 hover:text-gray-900 py-2"
+						>
 							<Plus className="h-4 w-4 mr-2" />
 							提交群名
 						</Link>
-						<div className="relative pt-2">
-							<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-							<Input
-								type="search"
-								placeholder="搜索群名..."
-								className="pl-10 w-full"
-								suppressHydrationWarning
-							/>
-						</div>
 					</nav>
 				</div>
 			)}

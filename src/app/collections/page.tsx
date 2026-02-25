@@ -1,6 +1,7 @@
 import { getDB } from '@/lib/db';
 import { getAllCollections } from '@/lib/db/queries';
 import { CollectionCard } from '@/components/group-name/collection-card';
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -19,6 +20,7 @@ export default async function CollectionsPage() {
 	return (
 		<div className="min-h-screen bg-white">
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+				<Breadcrumb items={[{ label: '合集' }]} />
 				<div className="flex items-center gap-2 mb-8">
 					<BookOpen className="h-6 w-6 text-gray-700" />
 					<h1 className="text-2xl font-bold text-gray-900">所有合集</h1>

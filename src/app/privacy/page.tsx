@@ -1,3 +1,4 @@
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,6 +10,7 @@ export default function PrivacyPage() {
 	return (
 		<div className="min-h-screen bg-white">
 			<main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+				<Breadcrumb items={[{ label: '隐私政策' }]} />
 				<h1 className="text-3xl font-bold text-gray-900 mb-8">隐私政策</h1>
 				<div className="prose prose-gray">
 					<p className="text-gray-600">我们非常重视您的隐私，本隐私政策说明了我们如何收集、使用和保护您的个人信息。</p>

@@ -1,6 +1,7 @@
 import { getDB } from '@/lib/db';
 import { getGroupNamesByCategory, getCategoryById } from '@/lib/db/queries';
 import { GroupNameCard } from '@/components/group-name/group-name-card';
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -48,6 +49,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 	return (
 		<div className="min-h-screen bg-white">
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+				<Breadcrumb items={[
+					{ label: '分类', href: '/categories' },
+					{ label: category.name }
+				]} />
 				<div className="flex items-center gap-3 mb-8">
 					{category.icon && (
 						<span className="text-4xl">{category.icon}</span>

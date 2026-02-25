@@ -1,6 +1,7 @@
 import { getDB } from '@/lib/db';
 import { getGroupNamesByCollection, getCollectionById } from '@/lib/db/queries';
 import { GroupNameCard } from '@/components/group-name/group-name-card';
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -48,6 +49,10 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 	return (
 		<div className="min-h-screen bg-white">
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+				<Breadcrumb items={[
+					{ label: '合集', href: '/collections' },
+					{ label: collection.name }
+				]} />
 				<div className="flex items-start gap-4 mb-8">
 					<div className="flex-1">
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">

@@ -1,3 +1,4 @@
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,6 +10,7 @@ export default function DisclaimerPage() {
 	return (
 		<div className="min-h-screen bg-white">
 			<main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+				<Breadcrumb items={[{ label: '免责声明' }]} />
 				<h1 className="text-3xl font-bold text-gray-900 mb-8">免责声明</h1>
 				<div className="prose prose-gray">
 					<p className="text-gray-600">使用本网站前，请仔细阅读以下免责声明。</p>

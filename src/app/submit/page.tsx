@@ -1,5 +1,6 @@
 import { getDB } from '@/lib/db';
 import { getAllCategories } from '@/lib/db/queries';
+import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { CheckCircle } from 'lucide-react';
 import { SubmitGroupNameForm } from '@/components/group-name/submit-form';
 import type { Metadata } from 'next';
@@ -19,6 +20,7 @@ export default async function SubmitPage() {
 	return (
 		<div className="min-h-screen bg-white">
 			<main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+				<Breadcrumb items={[{ label: '提交群名' }]} />
 				<div className="text-center mb-8">
 					<div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
 						<CheckCircle className="h-8 w-8 text-gray-600" />
