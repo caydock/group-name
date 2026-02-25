@@ -8,6 +8,8 @@ import { TrendingUp, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
 	title: '群名小岛 - 发现有趣好玩的群聊名称',
 	description: '群名小岛提供海量有趣的群名，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类，支持按分类浏览、查看最新和热门群名，一键复制使用',

@@ -4,6 +4,8 @@ import { CheckCircle } from 'lucide-react';
 import { SubmitGroupNameForm } from '@/components/group-name/submit-form';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
 	title: '提交群名 ',
 	description: '分享您发现或创造的有趣群名，与大家分享您的创意，丰富群名小岛',

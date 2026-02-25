@@ -5,6 +5,8 @@ import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
 	title: '热门群名 ',
 	description: '浏览最受欢迎、热度最高的微信群名、QQ群名，发现大家都喜欢的群聊名称',

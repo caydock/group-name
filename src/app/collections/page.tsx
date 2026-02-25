@@ -4,6 +4,8 @@ import { CollectionCard } from '@/components/group-name/collection-card';
 import { BookOpen } from 'lucide-react';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
 	title: '群名合集 ',
 	description: '精选群名合集，按主题整理的群名集合，包括搞笑合集、文艺合集、节日合集等，快速获取相关主题的群聊名称',

@@ -4,6 +4,8 @@ import { CategoryCard } from '@/components/group-name/category-card';
 import { Folder } from 'lucide-react';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
 	title: '群名分类 ',
 	description: '浏览所有群名分类，包括搞笑、文艺、商务、家庭、校园、游戏等各种风格分类，快速找到您喜欢的群聊名称',
