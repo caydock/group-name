@@ -3,6 +3,8 @@ import { getDB } from '@/lib/db';
 import { groupNames, categories, collections } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const db = getDB();
 	
