@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
@@ -21,11 +21,6 @@ export const metadata: Metadata = {
 	keywords: ["群名", "群名小岛", "搞笑群名", "群名生成", "群名推荐", "群聊名称"],
 	authors: [{ name: "群名小岛" }],
 	creator: "群名小岛",
-	viewport: {
-		width: 'device-width',
-		initialScale: 1,
-		maximumScale: 5,
-	},
 	icons: {
 		icon: [
 			{ url: '/images/favicon-16x16.jpg', sizes: '16x16', type: 'image/jpeg' },
@@ -67,6 +62,12 @@ export const metadata: Metadata = {
 			"max-snippet": -1,
 		},
 	},
+};
+
+export const viewport: Viewport = {
+	width: 'device-width',
+	initialScale: 1,
+	maximumScale: 5,
 };
 
 export default function RootLayout({
