@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from 'antd';
 import { cn } from '@/lib/utils';
 
 interface PendingGroupName {
@@ -148,20 +148,20 @@ function ReviewActions({ id }: { id: number }) {
 	return (
 		<div className="flex justify-end gap-2 w-full sm:w-auto">
 			<Button
-				variant="outline"
-				size="sm"
+				type="default"
+				size="small"
 				onClick={() => handleReview('rejected')}
 				disabled={isReviewing}
-				className="text-red-600 hover:text-red-700 hover:border-red-300 flex-1 sm:flex-none"
+				className="text-red-600 border-red-300 flex-1 sm:flex-none"
 			>
 				拒绝
 			</Button>
 			<Button
-				variant="outline"
-				size="sm"
+				type="default"
+				size="small"
 				onClick={() => handleReview('approved')}
 				disabled={isReviewing}
-				className="text-green-600 hover:text-green-700 hover:border-green-300 flex-1 sm:flex-none"
+				className="text-green-600 border-green-300 flex-1 sm:flex-none"
 			>
 				通过
 			</Button>

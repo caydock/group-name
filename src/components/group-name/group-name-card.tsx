@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
+import { Button, message } from 'antd';
+import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import { cn } from '@/lib/utils';
 
 interface GroupNameCardProps {
@@ -25,6 +25,7 @@ export function GroupNameCard({
 	const [copied, setCopied] = useState(false);
 	const [liked, setLiked] = useState(false);
 	const [localLikes, setLocalLikes] = useState(likes);
+	const [messageApi, contextHolder] = message.useMessage();
 
 	const handleCopy = async (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -32,6 +33,7 @@ export function GroupNameCard({
 			try {
 				await navigator.clipboard.writeText(name);
 				setCopied(true);
+				messageApi.success('已复制到剪贴板');
 				setTimeout(() => setCopied(false), 2000);
 			} catch (error) {
 				console.error('Failed to copy:', error);
@@ -47,6 +49,7 @@ export function GroupNameCard({
 				document.execCommand('copy');
 				document.body.removeChild(textArea);
 				setCopied(true);
+				messageApi.success('已复制到剪贴板');
 				setTimeout(() => setCopied(false), 2000);
 			} catch (fallbackError) {
 				console.error('Fallback copy also failed:', fallbackError);
@@ -70,42 +73,34 @@ export function GroupNameCard({
 	};
 
 	return (
-		<div
-			onClick={handleCopy}
-			className={cn(
-				'border border-gray-200 rounded-lg p-3',
-				'hover:shadow-md transition-shadow duration-200 cursor-pointer',
-				'bg-white',
-				className
-			)}
-		>
-			<div className="flex items-center justify-between gap-2">
-				<h3 className="text-base font-semibold text-gray-900 line-clamp-2 flex-1">
-					{name}
-				</h3>
-				<div className="flex items-center gap-2">
+		<>
+			{contextHolder}
+			<div
+				onClick={handleCopy}
+				className={cn(
+					'border border-gray-200 rounded-lg p-3',
+					'hover:shadow-md transition-shadow duration-200 cursor-pointer',
+					'bg-white',
+					className
+				)}
+			>
+				<div className="flex items-center justify-between gap-2">
+					<h3 className="text-base font-semibold text-gray-900 line-clamp-2 flex-1">
+						{name}
+					</h3>
 					<Button
-						variant="ghost"
-						size="sm"
+						type="text"
+						size="small"
+						icon={liked ? <HeartFilled style={{ color: '#ef4444' }} /> : <HeartOutlined />}
 						onClick={(e) => {
 							e.stopPropagation();
 							handleLike();
 						}}
-						className={cn(
-							'text-gray-600 hover:text-red-500 px-1.5 py-1 h-7',
-							liked && 'text-red-500'
-						)}
 					>
-						<Heart className={cn('h-3.5 w-3.5', liked && 'fill-current')} />
-						<span className="ml-0.5 text-xs">{localLikes}</span>
+						{localLikes}
 					</Button>
 				</div>
 			</div>
-			{copied && (
-				<div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
-					已复制到剪贴板
-				</div>
-			)}
-		</div>
+		</>
 	);
 }

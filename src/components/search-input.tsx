@@ -1,17 +1,16 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 export function SearchInput() {
 	return (
 		<div className="max-w-md mx-auto sm:hidden relative">
-			<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
 			<Input
 				type="search"
 				placeholder="搜索群名..."
-				className="pl-10"
-				suppressHydrationWarning
+				prefix={<SearchOutlined />}
+				className="sm:hidden"
 			/>
 		</div>
 	);

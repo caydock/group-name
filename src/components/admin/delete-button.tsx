@@ -1,15 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog';
+import { Button, Modal, message } from 'antd';
 import { AlertTriangle } from 'lucide-react';
 
 interface DeleteButtonProps {
@@ -21,7 +13,7 @@ interface DeleteButtonProps {
 
 export function DeleteButton({ action, children, className, onSuccess }: DeleteButtonProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const handleDelete = async () => {
 		setIsSubmitting(true);
@@ -32,14 +24,15 @@ export function DeleteButton({ action, children, className, onSuccess }: DeleteB
 			});
 
 			if (res.ok) {
-				setIsDialogOpen(false);
+				setIsModalOpen(false);
+				message.success('删除成功');
 				onSuccess?.();
 			} else {
 				const data = await res.json() as { error?: string };
-				alert(data.error || '删除失败');
+				message.error(data.error || '删除失败');
 			}
 		} catch (error) {
-			alert('删除失败，请重试');
+			message.error('删除失败，请重试');
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -48,43 +41,30 @@ export function DeleteButton({ action, children, className, onSuccess }: DeleteB
 	return (
 		<>
 			<Button
-				onClick={() => setIsDialogOpen(true)}
+				onClick={() => setIsModalOpen(true)}
 				disabled={isSubmitting}
-				className={`${className} bg-red-600 text-white hover:bg-red-700`}
+				className={className}
+				danger
 			>
 				{children}
 			</Button>
-			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<div className="flex items-center gap-3 mb-2">
-							<div className="bg-destructive/10 rounded-full p-2">
-								<AlertTriangle className="h-5 w-5 text-destructive" />
-							</div>
-							<DialogTitle>确认删除</DialogTitle>
-						</div>
-						<DialogDescription>
-							此操作无法撤销，确定要继续吗？
-						</DialogDescription>
-					</DialogHeader>
-					<DialogFooter>
-						<Button
-							variant="outline"
-							onClick={() => setIsDialogOpen(false)}
-							disabled={isSubmitting}
-						>
-							取消
-						</Button>
-						<Button
-							onClick={handleDelete}
-							disabled={isSubmitting}
-							className="bg-red-600 text-white hover:bg-red-700"
-						>
-							{isSubmitting ? '删除中...' : '确认删除'}
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
+			<Modal
+				open={isModalOpen}
+				onOk={handleDelete}
+				onCancel={() => setIsModalOpen(false)}
+				okText="确认删除"
+				cancelText="取消"
+				confirmLoading={isSubmitting}
+				okButtonProps={{ danger: true }}
+				title={
+					<div className="flex items-center gap-3">
+						<AlertTriangle className="h-5 w-5 text-red-500" />
+						确认删除
+					</div>
+				}
+			>
+				<p>此操作无法撤销，确定要继续吗？</p>
+			</Modal>
 		</>
 	);
 }

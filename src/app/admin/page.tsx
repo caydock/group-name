@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Input } from 'antd';
 import { BarChart3, CheckCircle, Folder, BookOpen, LogOut, ChevronDown, AlertCircle } from 'lucide-react';
 import { DashboardTab } from '@/components/admin/tabs/dashboard-tab';
 import { GroupNamesTab } from '@/components/admin/tabs/group-names-tab';
@@ -276,9 +275,8 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 					<label htmlFor="token" className="block text-sm font-medium text-foreground mb-1">
 						访问令牌
 					</label>
-					<Input
+					<Input.Password
 						id="token"
-						type="password"
 						value={token}
 						onChange={(e) => setToken(e.target.value)}
 						placeholder="请输入访问令牌"
@@ -293,7 +291,7 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 					</div>
 				)}
 
-				<Button type="submit" variant="outline" className="w-full" disabled={loading}>
+				<Button type="primary" className="w-full" disabled={loading} htmlType="submit">
 					{loading ? '登录中...' : '登录'}
 				</Button>
 			</form>

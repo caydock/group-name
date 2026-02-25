@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Input, message } from 'antd';
 import { cn } from '@/lib/utils';
 
 interface SubmitGroupNameFormProps {
@@ -17,23 +16,19 @@ interface SubmitGroupNameFormProps {
 	const [name, setName] = useState('');
 	const [categoryId, setCategoryId] = useState<number | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
 	const handleCategorySelect = (id: number) => {
 		console.log('Category selected:', id);
 		setCategoryId(id);
 	};
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-
+	const handleSubmit = async () => {
 		if (!name.trim() || categoryId === null) {
-			setSubmitStatus('error');
+			message.error('请填写完整信息');
 			return;
 		}
 
 		setIsSubmitting(true);
-		setSubmitStatus('idle');
 
 		try {
 			const response = await fetch('/api/submit', {
@@ -51,36 +46,32 @@ interface SubmitGroupNameFormProps {
 				throw new Error('提交失败');
 			}
 
-			setSubmitStatus('success');
+			message.success('提交成功！等待管理员审核后即可显示');
 			setName('');
 			setCategoryId(null);
 		} catch (error) {
 			console.error('Error submitting group name:', error);
-			setSubmitStatus('error');
+			message.error('提交失败，请稍后重试');
 		} finally {
 			setIsSubmitting(false);
 		}
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="space-y-6">
+		<div className="space-y-6">
 			<div>
 				<label htmlFor="name" className="block text-sm font-medium text-gray-900 mb-2">
 					群名 <span className="text-red-500">*</span>
 				</label>
 				<Input
 					id="name"
-					type="text"
 					value={name}
 					onChange={(e) => setName(e.target.value)}
 					placeholder="请输入有趣的群名"
 					maxLength={50}
-					required
 					disabled={isSubmitting}
+					showCount
 				/>
-				<p className="mt-1 text-xs text-gray-500">
-					{name.length}/50 字符
-				</p>
 			</div>
 
 			<div>
@@ -125,29 +116,15 @@ interface SubmitGroupNameFormProps {
 				</div>
 			</div>
 
-			{submitStatus === 'success' && (
-				<div className="bg-green-50 border border-green-200 rounded-md p-4">
-					<p className="text-sm text-green-800">
-						✓ 提交成功！等待管理员审核后即可显示
-					</p>
-				</div>
-			)}
-
-			{submitStatus === 'error' && (
-				<div className="bg-red-50 border border-red-200 rounded-md p-4">
-					<p className="text-sm text-red-800">
-						✗ 提交失败，请稍后重试
-					</p>
-				</div>
-			)}
-
 			<Button
-				type="submit"
+				type="primary"
+				onClick={handleSubmit}
 				className="w-full"
-				disabled={isSubmitting || !name.trim() || categoryId === null}
+				loading={isSubmitting}
+				disabled={!name.trim() || categoryId === null}
 			>
-				{isSubmitting ? '提交中...' : '提交群名'}
+				提交群名
 			</Button>
-		</form>
+		</div>
 	);
 }

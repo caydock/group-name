@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button } from 'antd';
 import { Home, Search } from 'lucide-react';
 
 export default function NotFound() {
@@ -14,18 +14,16 @@ export default function NotFound() {
 					抱歉，您访问的页面不存在或已被删除
 				</p>
 				<div className="flex items-center justify-center gap-4">
-					<Button asChild>
-						<Link href="/">
-							<Home className="h-4 w-4 mr-2" />
+					<Link href="/">
+						<Button icon={<Home className="h-4 w-4" />}>
 							返回首页
-						</Link>
-					</Button>
-					<Button variant="outline" asChild>
-						<Link href="/categories">
-							<Search className="h-4 w-4 mr-2" />
+						</Button>
+					</Link>
+					<Link href="/categories">
+						<Button icon={<Search className="h-4 w-4" />}>
 							浏览分类
-						</Link>
-					</Button>
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</div>

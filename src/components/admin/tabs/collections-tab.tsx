@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from 'antd';
 import { DeleteButton } from '@/components/admin/delete-button';
 import { Pencil } from 'lucide-react';
 
@@ -222,8 +222,8 @@ export function CollectionsTab() {
 
 					<div className="flex items-end">
 						<Button
-							type="submit"
-							variant="outline"
+							type="default"
+							htmlType="submit"
 							disabled={submitting}
 						>
 							{submitting ? '添加中...' : '添加合集'}
@@ -285,18 +285,17 @@ export function CollectionsTab() {
 										{editingId === collection.id ? (
 											<div className="flex flex-col gap-2">
 												<Button
-													variant="outline"
-													size="sm"
+													size="small"
 													onClick={handleCancelEdit}
 												>
 													取消
 												</Button>
 												<Button
-													variant="outline"
-													size="sm"
+													size="small"
 													onClick={(e) => handleUpdate(e, collection.id)}
 													disabled={submitting}
 													className="bg-orange-500 text-white hover:bg-orange-600"
+													type="primary"
 												>
 													{submitting ? '保存中...' : '保存'}
 												</Button>
@@ -309,11 +308,10 @@ export function CollectionsTab() {
 											</div>
 										) : (
 											<Button
-												variant="outline"
-												size="sm"
+												size="small"
 												onClick={() => handleEdit(collection)}
+												icon={<Pencil className="h-4 w-4" />}
 											>
-												<Pencil className="h-4 w-4" />
 												编辑
 											</Button>
 										)}
@@ -388,18 +386,16 @@ export function CollectionsTab() {
 								</div>
 								<div className="flex gap-2">
 									<Button
-										type="button"
-										variant="outline"
 										onClick={handleCancelEdit}
 										className="flex-1"
 									>
 										取消
 									</Button>
 									<Button
-										type="submit"
-										variant="outline"
-										className="flex-1 bg-orange-500 text-white hover:bg-orange-600"
+										type="primary"
+										className="flex-1 bg-orange-500 hover:bg-orange-600"
 										disabled={submitting}
+										htmlType="submit"
 									>
 										{submitting ? '保存中...' : '保存'}
 									</Button>
@@ -431,10 +427,9 @@ export function CollectionsTab() {
 								<div className="flex justify-between items-center pt-3 border-t border-gray-100">
 									<span className="text-sm text-gray-600">排序: {collection.sortOrder}</span>
 									<Button
-										variant="outline"
 										onClick={() => handleEdit(collection)}
+										icon={<Pencil className="h-4 w-4" />}
 									>
-										<Pencil className="h-4 w-4" />
 										编辑
 									</Button>
 								</div>
