@@ -1,9 +1,12 @@
-import { createLocalDB } from '../src/lib/db';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
 import * as schema from '../src/lib/db/schema';
 import { or, isNotNull } from 'drizzle-orm';
 
 async function checkData() {
-  const db = createLocalDB();
+  const sqlite = new Database('./data/local.db');
+  sqlite.pragma('foreign_keys = ON');
+  const db = drizzle(sqlite, { schema });
   const categories = await db.select().from(schema.categories);
   const collections = await db.select().from(schema.collections);
   const groupNames = await db.select().from(schema.groupNames);

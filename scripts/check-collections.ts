@@ -1,9 +1,12 @@
-import { createLocalDB } from '../src/lib/db';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
 import * as schema from '../src/lib/db/schema';
-import { eq, isNotNull } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 async function checkCollections() {
-  const db = createLocalDB();
+  const sqlite = new Database('./data/local.db');
+  sqlite.pragma('foreign_keys = ON');
+  const db = drizzle(sqlite, { schema });
   
   console.log('\n=== 检查合集数据 ===');
   const collections = await db.select().from(schema.collections);

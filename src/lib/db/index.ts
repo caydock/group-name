@@ -1,27 +1,36 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { drizzle as drizzleD1 } from 'drizzle-orm/d1';
-import Database from 'better-sqlite3';
 import * as schema from './schema';
 import type { CloudflareEnv } from '@/types/cloudflare';
-
-export function createLocalDB() {
-  const dbPath = process.env.DB || './data/local.db';
-  const sqlite = new Database(dbPath);
-  
-  sqlite.pragma('foreign_keys = ON');
-  
-  return drizzle(sqlite, { schema });
-}
 
 export function createProductionDB(env: CloudflareEnv) {
   return drizzleD1(env.DB, { schema });
 }
 
+let cachedDB: ReturnType<typeof createProductionDB> | null = null;
+
 export function getDB(env?: CloudflareEnv) {
-  if (process.env.NODE_ENV === 'production' && env) {
-    return createProductionDB(env);
+  if (cachedDB) {
+    return cachedDB;
   }
-  return createLocalDB();
+  
+  if (env) {
+    cachedDB = createProductionDB(env);
+    return cachedDB;
+  }
+
+  // Try to get env from Cloudflare context in Workers environment
+  try {
+    const { getCloudflareContext } = require('@opennextjs/cloudflare');
+    const cfEnv = getCloudflareContext();
+    if (cfEnv?.env) {
+      cachedDB = createProductionDB(cfEnv.env);
+      return cachedDB;
+    }
+  } catch {
+    // Not in Cloudflare Workers environment or getCloudflareContext not available
+  }
+
+  throw new Error('Cloudflare Workers environment (env) is required');
 }
 
 export type DB = any;

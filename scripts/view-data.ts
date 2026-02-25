@@ -1,9 +1,12 @@
-import { createLocalDB } from '../src/lib/db';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
 import * as schema from '../src/lib/db/schema';
 import { isNull, isNotNull, or, and } from 'drizzle-orm';
 
 async function viewData() {
-  const db = createLocalDB();
+  const sqlite = new Database('./data/local.db');
+  sqlite.pragma('foreign_keys = ON');
+  const db = drizzle(sqlite, { schema });
   
   console.log('\n=== 分类列表 ===');
   const categories = await db.select().from(schema.categories);
