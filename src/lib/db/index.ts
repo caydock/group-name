@@ -5,7 +5,7 @@ import * as schema from './schema';
 import type { CloudflareEnv } from '@/types/cloudflare';
 
 export function createLocalDB() {
-  const dbPath = process.env.DATABASE_URL || './data/local.db';
+  const dbPath = process.env.DB || './data/local.db';
   const sqlite = new Database(dbPath);
   
   sqlite.pragma('foreign_keys = ON');
