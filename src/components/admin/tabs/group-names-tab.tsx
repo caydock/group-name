@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { DeleteButton } from '@/components/admin/delete-button';
@@ -234,14 +234,11 @@ export function GroupNamesTab() {
 								状态
 							</label>
 							<Select
-								value={filters.status || 'all'}
-								onValueChange={(value) => handleFilterChange('status', value === 'all' ? '' : value)}
+								value={filters.status}
+								onValueChange={(value) => handleFilterChange('status', value)}
+								placeholder="全部"
 							>
-								<SelectTrigger>
-									<SelectValue placeholder="全部" />
-								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="all">全部</SelectItem>
 									<SelectItem value="pending">待审核</SelectItem>
 									<SelectItem value="approved">已通过</SelectItem>
 									<SelectItem value="rejected">已拒绝</SelectItem>
@@ -254,14 +251,11 @@ export function GroupNamesTab() {
 								分类
 							</label>
 							<Select
-								value={filters.categoryId || 'all'}
-								onValueChange={(value) => handleFilterChange('categoryId', value === 'all' ? '' : value)}
+								value={filters.categoryId}
+								onValueChange={(value) => handleFilterChange('categoryId', value)}
+								placeholder="全部分类"
 							>
-								<SelectTrigger>
-									<SelectValue placeholder="全部分类" />
-								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="all">全部分类</SelectItem>
 									{categories.map((cat) => (
 										<SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
 									))}
@@ -274,14 +268,11 @@ export function GroupNamesTab() {
 								合集
 							</label>
 							<Select
-								value={filters.collectionId || 'all'}
-								onValueChange={(value) => handleFilterChange('collectionId', value === 'all' ? '' : value)}
+								value={filters.collectionId}
+								onValueChange={(value) => handleFilterChange('collectionId', value)}
+								placeholder="全部合集"
 							>
-								<SelectTrigger>
-									<SelectValue placeholder="全部合集" />
-								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="all">全部合集</SelectItem>
 									{collections.map((col) => (
 										<SelectItem key={col.id} value={col.id.toString()}>{col.name}</SelectItem>
 									))}
@@ -346,14 +337,11 @@ export function GroupNamesTab() {
 										分类
 									</label>
 									<Select
-										value={addForm.categoryId || 'none'}
-										onValueChange={(value) => setAddForm({ ...addForm, categoryId: value === 'none' ? '' : value })}
+										value={addForm.categoryId}
+										onValueChange={(value) => setAddForm({ ...addForm, categoryId: value })}
+										placeholder="无分类"
 									>
-										<SelectTrigger>
-											<SelectValue placeholder="无分类" />
-										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="none">无分类</SelectItem>
 											{categories.map((cat) => (
 												<SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
 											))}
@@ -365,14 +353,11 @@ export function GroupNamesTab() {
 										合集
 									</label>
 									<Select
-										value={addForm.collectionId || 'none'}
-										onValueChange={(value) => setAddForm({ ...addForm, collectionId: value === 'none' ? '' : value })}
+										value={addForm.collectionId}
+										onValueChange={(value) => setAddForm({ ...addForm, collectionId: value })}
+										placeholder="无合集"
 									>
-										<SelectTrigger>
-											<SelectValue placeholder="无合集" />
-										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="none">无合集</SelectItem>
 											{collections.map((col) => (
 												<SelectItem key={col.id} value={col.id.toString()}>{col.name}</SelectItem>
 											))}
@@ -463,13 +448,10 @@ export function GroupNamesTab() {
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
 											{editingId === item.id ? (
 												<Select
-													value={editForm.categoryId || 'none'} onValueChange={(value) => setEditForm({ ...editForm, categoryId: value === 'none' ? '' : value })}
+													value={editForm.categoryId} onValueChange={(value) => setEditForm({ ...editForm, categoryId: value })}
+													placeholder="无分类"
 												>
-													<SelectTrigger>
-														<SelectValue placeholder="无分类" />
-													</SelectTrigger>
 													<SelectContent>
-														<SelectItem value="none">无分类</SelectItem>
 														{categories.map((cat) => (
 															<SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
 														))}
@@ -482,13 +464,10 @@ export function GroupNamesTab() {
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
 											{editingId === item.id ? (
 												<Select
-													value={editForm.collectionId || 'none'} onValueChange={(value) => setEditForm({ ...editForm, collectionId: value === 'none' ? '' : value })}
+													value={editForm.collectionId} onValueChange={(value) => setEditForm({ ...editForm, collectionId: value })}
+													placeholder="无合集"
 												>
-													<SelectTrigger>
-														<SelectValue placeholder="无合集" />
-													</SelectTrigger>
 													<SelectContent>
-														<SelectItem value="none">无合集</SelectItem>
 														{collections.map((col) => (
 															<SelectItem key={col.id} value={col.id.toString()}>{col.name}</SelectItem>
 														))}
@@ -504,9 +483,6 @@ export function GroupNamesTab() {
 													value={editForm.status}
 													onValueChange={(value: 'pending' | 'approved' | 'rejected') => setEditForm({ ...editForm, status: value })}
 												>
-													<SelectTrigger>
-														<SelectValue />
-													</SelectTrigger>
 													<SelectContent>
 														<SelectItem value="pending">待审核</SelectItem>
 														<SelectItem value="approved">已通过</SelectItem>
@@ -593,12 +569,8 @@ export function GroupNamesTab() {
 										</div>
 										<div>
 											<label className="block text-sm font-medium text-foreground mb-1">分类</label>
-											<Select value={editForm.categoryId || 'none'} onValueChange={(value) => setEditForm({ ...editForm, categoryId: value === 'none' ? '' : value })}>
-												<SelectTrigger>
-													<SelectValue placeholder="无分类" />
-												</SelectTrigger>
+											<Select value={editForm.categoryId} onValueChange={(value) => setEditForm({ ...editForm, categoryId: value })} placeholder="无分类">
 												<SelectContent>
-													<SelectItem value="none">无分类</SelectItem>
 													{categories.map((cat) => (
 														<SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
 													))}
@@ -607,12 +579,8 @@ export function GroupNamesTab() {
 										</div>
 										<div>
 											<label className="block text-sm font-medium text-foreground mb-1">合集</label>
-											<Select value={editForm.collectionId || 'none'} onValueChange={(value) => setEditForm({ ...editForm, collectionId: value === 'none' ? '' : value })}>
-												<SelectTrigger>
-													<SelectValue placeholder="无合集" />
-												</SelectTrigger>
+											<Select value={editForm.collectionId} onValueChange={(value) => setEditForm({ ...editForm, collectionId: value })} placeholder="无合集">
 												<SelectContent>
-													<SelectItem value="none">无合集</SelectItem>
 													{collections.map((col) => (
 														<SelectItem key={col.id} value={col.id.toString()}>{col.name}</SelectItem>
 													))}
@@ -625,9 +593,6 @@ export function GroupNamesTab() {
 												value={editForm.status}
 												onValueChange={(value: 'pending' | 'approved' | 'rejected') => setEditForm({ ...editForm, status: value })}
 											>
-												<SelectTrigger>
-													<SelectValue />
-												</SelectTrigger>
 												<SelectContent>
 													<SelectItem value="pending">待审核</SelectItem>
 													<SelectItem value="approved">已通过</SelectItem>

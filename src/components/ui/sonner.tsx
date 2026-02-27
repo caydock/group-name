@@ -25,25 +25,22 @@ interface Toast {
   duration?: number
 }
 
-type ToastContextValue = {
-  toasts: Toast[]
-  toast: (toast: Toast) => void
-  dismiss: (id: string) => void
-}
-
-const ToastContext = React.createContext<ToastContextValue | null>(null)
+const toasts = React.createRef<Toast[]>()
+const listeners = new Set<() => void>()
+const updateListeners = () => listeners.forEach(l => l())
 
 function toast({ type = "info", title, description, action, duration = 4000 }: Omit<Toast, "id">): string | undefined {
-  const context = React.useContext(ToastContext)
-  if (!context) return undefined
+  if (!toasts.current) return undefined
 
   const id = Math.random().toString(36).substr(2, 9)
   const newToast: Toast = { id, type, title, description, action, duration }
-  context.toast(newToast)
+  
+  toasts.current.push(newToast)
+  updateListeners()
 
   if (type !== "loading") {
     setTimeout(() => {
-      context.dismiss(id)
+      dismiss(id)
     }, duration)
   }
 
@@ -56,29 +53,37 @@ toast.warning = (title: string, description?: string) => toast({ type: "warning"
 toast.info = (title: string, description?: string) => toast({ type: "info", title, description })
 toast.loading = (title: string, description?: string) => toast({ type: "loading", title, description, duration: Infinity })
 
+function dismiss(id: string) {
+  if (!toasts.current) return
+  const index = toasts.current.findIndex((t) => t.id === id)
+  if (index !== -1) {
+    toasts.current.splice(index, 1)
+    updateListeners()
+  }
+}
+
 function Toaster({ className, ...props }: React.ComponentProps<"div">) {
-  const [toasts, setToasts] = React.useState<Toast[]>([])
+  const [, forceUpdate] = React.useState(0)
 
-  const toastFn = React.useCallback((newToast: Toast) => {
-    setToasts((prev) => [...prev, newToast])
-  }, [])
-
-  const dismiss = React.useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-  }, [])
+  React.useEffect(() => {
+    toasts.current = []
+    listeners.add(() => forceUpdate(c => c + 1))
+    return () => {
+      listeners.delete(() => forceUpdate(c => c + 1))
+      toasts.current = []
+    }
+  }, [forceUpdate])
 
   return (
-    <ToastContext.Provider value={{ toasts, toast: toastFn, dismiss }}>
-      <div
-        data-slot="toaster"
-        className={`fixed bottom-0 right-0 z-[100] flex flex-col gap-2 p-4 max-h-screen w-full sm:max-w-md ${className || ""}`}
-        {...props}
-      >
-        {toasts.map((t) => (
-          <ToastItem key={t.id} {...t} onDismiss={() => dismiss(t.id)} />
-        ))}
-      </div>
-    </ToastContext.Provider>
+    <div
+      data-slot="toaster"
+      className={`fixed bottom-0 right-0 z-[100] flex flex-col gap-2 p-4 max-h-screen w-full sm:max-w-md ${className || ""}`}
+      {...props}
+    >
+      {toasts.current?.map((t) => (
+        <ToastItem key={t.id} {...t} onDismiss={() => dismiss(t.id)} />
+      ))}
+    </div>
   )
 }
 

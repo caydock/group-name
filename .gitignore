@@ -201,7 +201,3 @@ dist
 ### OpenNext ###
 .open-next/
 next-env.d.ts
-
-### Local Database ###
-data/
-*.db
