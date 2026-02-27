@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
 	title: '服务条款',
-	description: '群名小岛服务条款',
+	description: '群名岛服务条款',
 };
 
 export default function TermsPage() {
@@ -13,9 +13,9 @@ export default function TermsPage() {
 				<Breadcrumb items={[{ label: '服务条款' }]} />
 				<h1 className="text-3xl font-bold text-gray-900 mb-8">服务条款</h1>
 				<div className="prose prose-gray">
-					<p className="text-gray-600">欢迎使用群名小岛。使用本网站即表示您同意以下服务条款。</p>
+					<p className="text-gray-600">欢迎使用群名岛。使用本网站即表示您同意以下服务条款。</p>
 					<h2 className="text-xl font-semibold mt-6 mb-3">1. 服务内容</h2>
-					<p className="text-gray-600">群名小岛提供群名展示、浏览、复制等服务，用户可以在平台上发现和分享有趣的群名。</p>
+					<p className="text-gray-600">群名岛提供群名展示、浏览、复制等服务，用户可以在平台上发现和分享发现有趣好玩的群聊名称。</p>
 					<h2 className="text-xl font-semibold mt-6 mb-3">2. 用户行为</h2>
 					<p className="text-gray-600">用户应遵守法律法规，不得发布违法、侵权、淫秽、暴力等内容。用户对自己的行为负责。</p>
 					<h2 className="text-xl font-semibold mt-6 mb-3">3. 知识产权</h2>

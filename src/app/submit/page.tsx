@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
 	title: '提交群名 ',
-	description: '分享您发现或创造的有趣群名，与大家分享您的创意，丰富群名小岛',
+	description: '分享您发现或创造的有趣群名，与大家分享您的创意，丰富群名岛',
 	keywords: '提交群名,群名投稿,分享群名,原创群名',
 };
 
@@ -27,7 +27,7 @@ export default async function SubmitPage() {
 					</div>
 					<h1 className="text-3xl font-bold text-gray-900 mb-2">提交群名</h1>
 					<p className="text-gray-600">
-						分享有趣的群名，让大家一起欣赏
+						分享发现有趣好玩的群聊名称，让大家一起欣赏
 					</p>
 				</div>
 

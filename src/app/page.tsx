@@ -10,9 +10,9 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-	title: '群名小岛 - 发现有趣好玩的群聊名称',
-	description: '群名小岛提供海量有趣的群名，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类，支持按分类浏览、查看最新和热门群名，一键复制使用',
-	keywords: '群名小岛,群名,群聊名称,搞笑群名,文艺群名,群名推荐',
+	title: '群名岛 - 发现有趣好玩的群聊名称',
+	description: '群名岛提供海量群聊名称，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类，支持按分类浏览、查看最新和热门群名，一键复制使用',
+	keywords: '群名岛,群名,群聊名称,搞笑群名,文艺群名,群名推荐',
 };
 
 export default async function HomePage() {

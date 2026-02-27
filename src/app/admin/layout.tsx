@@ -9,7 +9,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
 	title: '管理后台',
-	description: '群名小岛管理后台，审核用户提交的群名，管理分类和合集',
+	description: '群名岛管理后台，审核用户提交的群名，管理分类和合集',
 	robots: {
 		index: false,
 		follow: false,

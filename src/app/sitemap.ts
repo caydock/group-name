@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		db.select().from(collections),
 	]);
 
-	const baseUrl = 'https://qunming.caydock.com';
+	const baseUrl = 'https://qm.caydock.com';
 
 	const staticPages: MetadataRoute.Sitemap = [
 		{

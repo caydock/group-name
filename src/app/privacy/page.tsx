@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
 	title: '隐私政策',
-	description: '群名小岛隐私政策',
+	description: '群名岛隐私政策',
 };
 
 export default function PrivacyPage() {

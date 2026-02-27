@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
 	title: '免责声明',
-	description: '群名小岛免责声明',
+	description: '群名岛免责声明',
 };
 
 export default function DisclaimerPage() {

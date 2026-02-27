@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
 				allow: '/',
 			},
 		],
-		sitemap: 'https://qunming.caydock.com/sitemap.xml',
+		sitemap: 'https://qm.caydock.com/sitemap.xml',
 	};
 }

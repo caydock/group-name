@@ -8,7 +8,7 @@ export function Footer() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<div className="flex flex-col md:flex-row items-center justify-between gap-4">
 					<p className="text-gray-600 text-sm">
-						© {currentYear} 群名小岛. 保留所有权利.
+						© {currentYear} 群名岛. 保留所有权利.
 					</p>
 					<div className="flex items-center gap-6 text-sm text-gray-600">
 						<Link href="/terms" className="hover:text-gray-900">

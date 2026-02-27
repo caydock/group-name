@@ -69,7 +69,7 @@ interface SubmitGroupNameFormProps {
 					id="name"
 					value={name}
 					onChange={(e) => setName(e.target.value)}
-					placeholder="请输入有趣的群名"
+					placeholder="请输入有趣好玩的群聊名称"
 					maxLength={50}
 					disabled={isSubmitting}
 				/>

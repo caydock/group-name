@@ -16,8 +16,8 @@ export function Header() {
 				<div className="flex items-center justify-between h-16">
 					<div className="flex items-center">
 						<Link href="/" className="flex items-center gap-2">
-							<img src="/images/logo-64x64.jpg" alt="群名小岛" className="h-10 w-10 object-cover rounded-lg" />
-							<span className="text-2xl font-bold text-gray-900">群名小岛</span>
+							<img src="/images/logo-64x64.jpg" alt="群名岛" className="h-10 w-10 object-cover rounded-lg" />
+							<span className="text-2xl font-bold text-gray-900">群名岛</span>
 						</Link>
 					</div>
 

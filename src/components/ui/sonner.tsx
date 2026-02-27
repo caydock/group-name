@@ -25,11 +25,11 @@ interface Toast {
   duration?: number
 }
 
-const toasts = React.createRef<Toast[]>()
+const toasts = React.createRef<Toast[] & { closing?: Set<string> }>()
 const listeners = new Set<() => void>()
 const updateListeners = () => listeners.forEach(l => l())
 
-function toast({ type = "info", title, description, action, duration = 4000 }: Omit<Toast, "id">): string | undefined {
+function toast({ type = "info", title, description, action, duration = 1000 }: Omit<Toast, "id">): string | undefined {
   if (!toasts.current) return undefined
 
   const id = Math.random().toString(36).substr(2, 9)
@@ -55,11 +55,21 @@ toast.loading = (title: string, description?: string) => toast({ type: "loading"
 
 function dismiss(id: string) {
   if (!toasts.current) return
-  const index = toasts.current.findIndex((t) => t.id === id)
-  if (index !== -1) {
-    toasts.current.splice(index, 1)
-    updateListeners()
+  if (!toasts.current.closing) {
+    toasts.current.closing = new Set()
   }
+  toasts.current.closing.add(id)
+  updateListeners()
+  
+  setTimeout(() => {
+    if (!toasts.current) return
+    const index = toasts.current.findIndex((t) => t.id === id)
+    if (index !== -1) {
+      toasts.current.splice(index, 1)
+      toasts.current.closing?.delete(id)
+      updateListeners()
+    }
+  }, 300)
 }
 
 function Toaster({ className, ...props }: React.ComponentProps<"div">) {
@@ -67,6 +77,7 @@ function Toaster({ className, ...props }: React.ComponentProps<"div">) {
 
   React.useEffect(() => {
     toasts.current = []
+    toasts.current.closing = new Set()
     listeners.add(() => forceUpdate(c => c + 1))
     return () => {
       listeners.delete(() => forceUpdate(c => c + 1))
@@ -77,11 +88,11 @@ function Toaster({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="toaster"
-      className={`fixed bottom-0 right-0 z-[100] flex flex-col gap-2 p-4 max-h-screen w-full sm:max-w-md ${className || ""}`}
+      className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] flex flex-col gap-2 p-4 max-h-screen w-full sm:max-w-md ${className || ""}`}
       {...props}
     >
       {toasts.current?.map((t) => (
-        <ToastItem key={t.id} {...t} onDismiss={() => dismiss(t.id)} />
+        <ToastItem key={t.id} {...t} onDismiss={() => dismiss(t.id)} id={t.id} />
       ))}
     </div>
   )
@@ -103,32 +114,24 @@ const typeStyles: Record<ToastType, string> = {
   loading: "bg-blue-500",
 }
 
-function ToastItem({ type = "info", title, description, action, onDismiss }: Toast & { onDismiss: () => void }) {
+function ToastItem({ type = "info", title, description, action, onDismiss, id }: Toast & { onDismiss: () => void }) {
+  const isClosing = toasts.current?.closing?.has(id)
+  
   return (
     <div
       data-slot="toast"
+      onClick={onDismiss}
       className={cn(
-        "bg-background text-foreground border border-border shadow-lg rounded-lg p-4 flex items-start gap-3 pointer-events-auto transition-all",
-        "animate-in slide-in-from-right-full duration-300"
+        "w-fit min-w-fit max-w-sm mx-auto bg-black/80 backdrop-blur-md text-white shadow-lg rounded-lg p-4 pointer-events-auto transition-all cursor-pointer text-center",
+        isClosing 
+          ? "animate-out fade-out duration-300" 
+          : "animate-in fade-in duration-300"
       )}
     >
-      <div className={cn("rounded-full p-1 text-white", typeStyles[type])}>
-        {icons[type]}
-      </div>
-      <div className="flex-1 space-y-1">
+      <div className="space-y-1">
         {title && <p className="font-semibold text-sm">{title}</p>}
-        {description && <p className="text-sm text-muted-foreground">{description}</p>}
+        {description && <p className="text-sm text-gray-200">{description}</p>}
       </div>
-      <button
-        type="button"
-        onClick={onDismiss}
-        className="text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
     </div>
   )
 }
