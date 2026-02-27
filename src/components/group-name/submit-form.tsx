@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Input, message } from 'antd';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 
 interface SubmitGroupNameFormProps {
@@ -24,7 +26,7 @@ interface SubmitGroupNameFormProps {
 
 	const handleSubmit = async () => {
 		if (!name.trim() || categoryId === null) {
-			message.error('请填写完整信息');
+			toast.error('请填写完整信息');
 			return;
 		}
 
@@ -46,12 +48,12 @@ interface SubmitGroupNameFormProps {
 				throw new Error('提交失败');
 			}
 
-			message.success('提交成功！等待管理员审核后即可显示');
+			toast.success('提交成功！等待管理员审核后即可显示');
 			setName('');
 			setCategoryId(null);
 		} catch (error) {
 			console.error('Error submitting group name:', error);
-			message.error('提交失败，请稍后重试');
+			toast.error('提交失败，请稍后重试');
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -70,8 +72,8 @@ interface SubmitGroupNameFormProps {
 					placeholder="请输入有趣的群名"
 					maxLength={50}
 					disabled={isSubmitting}
-					showCount
 				/>
+				<p className="text-xs text-gray-500 mt-1">{name.length}/50</p>
 			</div>
 
 			<div>
@@ -117,13 +119,11 @@ interface SubmitGroupNameFormProps {
 			</div>
 
 			<Button
-				type="primary"
 				onClick={handleSubmit}
 				className="w-full"
-				loading={isSubmitting}
-				disabled={!name.trim() || categoryId === null}
+				disabled={!name.trim() || categoryId === null || isSubmitting}
 			>
-				提交群名
+				{isSubmitting ? '提交中...' : '提交群名'}
 			</Button>
 		</div>
 	);

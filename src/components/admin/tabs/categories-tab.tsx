@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from 'antd';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { DeleteButton } from '@/components/admin/delete-button';
 import { Pencil } from 'lucide-react';
 
@@ -145,13 +146,11 @@ export function CategoriesTab() {
 						<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
 							分类名称 <span className="text-red-500">*</span>
 						</label>
-						<input
+						<Input
 							id="name"
 							name="name"
-							type="text"
 							value={formData.name}
 							onChange={handleChange}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 							required
 						/>
 					</div>
@@ -160,13 +159,11 @@ export function CategoriesTab() {
 						<label htmlFor="icon" className="block text-sm font-medium text-gray-700 mb-1">
 							图标（Emoji）
 						</label>
-						<input
+						<Input
 							id="icon"
 							name="icon"
-							type="text"
 							value={formData.icon}
 							onChange={handleChange}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 							placeholder="😀"
 						/>
 					</div>
@@ -175,13 +172,11 @@ export function CategoriesTab() {
 						<label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
 							描述
 						</label>
-						<input
+						<Input
 							id="description"
 							name="description"
-							type="text"
 							value={formData.description}
 							onChange={handleChange}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
 
@@ -189,21 +184,19 @@ export function CategoriesTab() {
 						<label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1">
 							排序
 						</label>
-						<input
+						<Input
 							id="sortOrder"
 							name="sortOrder"
 							type="number"
 							value={formData.sortOrder}
 							onChange={handleChange}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 					</div>
 				</div>
 
 				<div className="mt-4">
 					<Button
-						type="default"
-						htmlType="submit"
+						onClick={handleSubmit}
 						disabled={submitting}
 					>
 						{submitting ? '添加中...' : '添加分类'}
@@ -252,17 +245,16 @@ export function CategoriesTab() {
 										{editingId === category.id ? (
 											<div className="flex flex-col gap-2">
 												<Button
-													size="small"
+													size="sm"
+													variant="outline"
 													onClick={handleCancelEdit}
 												>
 													取消
 												</Button>
 												<Button
-													size="small"
+													size="sm"
 													onClick={(e) => handleUpdate(e, category.id)}
 													disabled={submitting}
-													className="bg-orange-500 text-white hover:bg-orange-600"
-													type="primary"
 												>
 													{submitting ? '保存中...' : '保存'}
 												</Button>
@@ -275,10 +267,11 @@ export function CategoriesTab() {
 											</div>
 										) : (
 											<Button
-												size="small"
+												size="sm"
+												variant="outline"
 												onClick={() => handleEdit(category)}
-												icon={<Pencil className="h-4 w-4" />}
 											>
+												<Pencil className="h-4 w-4 mr-2" />
 												编辑
 											</Button>
 										)}
@@ -302,58 +295,51 @@ export function CategoriesTab() {
 								)}
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">图标</label>
-									<input
+									<Input
 										name="icon"
-										type="text"
 										value={formData.icon}
 										onChange={handleChange}
-										className="w-full px-3 py-2 border border-gray-300 rounded-md"
 										placeholder="😀"
 									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">名称</label>
-									<input
+									<Input
 										name="name"
-										type="text"
 										value={formData.name}
 										onChange={handleChange}
-										className="w-full px-3 py-2 border border-gray-300 rounded-md"
 										required
 									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
-									<input
+									<Input
 										name="description"
-										type="text"
 										value={formData.description}
 										onChange={handleChange}
-										className="w-full px-3 py-2 border border-gray-300 rounded-md"
 									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">排序</label>
-									<input
+									<Input
 										name="sortOrder"
 										type="number"
 										value={formData.sortOrder}
 										onChange={handleChange}
-										className="w-full px-3 py-2 border border-gray-300 rounded-md"
 									/>
 								</div>
 								<div className="flex gap-2">
 									<Button
+										variant="outline"
 										onClick={handleCancelEdit}
 										className="flex-1"
 									>
 										取消
 									</Button>
 									<Button
-										type="primary"
-										className="flex-1 bg-orange-500 hover:bg-orange-600"
+										className="flex-1"
 										disabled={submitting}
-										htmlType="submit"
+										type="submit"
 									>
 										{submitting ? '保存中...' : '保存'}
 									</Button>
@@ -380,9 +366,10 @@ export function CategoriesTab() {
 								<div className="flex justify-between items-center pt-3 border-t border-gray-100">
 									<span className="text-sm text-gray-600">排序: {category.sortOrder}</span>
 									<Button
+										variant="outline"
 										onClick={() => handleEdit(category)}
-										icon={<Pencil className="h-4 w-4" />}
 									>
+										<Pencil className="h-4 w-4 mr-2" />
 										编辑
 									</Button>
 								</div>

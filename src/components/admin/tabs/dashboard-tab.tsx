@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card } from 'antd';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatCard } from '@/components/admin/stat-card';
 import { PendingGroupNamesTable } from '@/components/admin/pending-group-names-table';
 
@@ -87,16 +87,21 @@ export function DashboardTab() {
 			</div>
 
 			{pendingResult.data.length > 0 && (
-				<Card title="待审核群名">
-					<PendingGroupNamesTable groupNames={pendingResult.data} />
-					{pendingResult.total > pendingResult.pageSize && (
-						<button
-							onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'group-names' }))}
-							className="inline-flex items-center mt-4 text-sm text-primary hover:underline"
-						>
-							查看全部 {pendingResult.total} 条待审核 →
-						</button>
-					)}
+				<Card>
+					<CardHeader>
+						<CardTitle>待审核群名</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<PendingGroupNamesTable groupNames={pendingResult.data} />
+						{pendingResult.total > pendingResult.pageSize && (
+							<button
+								onClick={() => window.dispatchEvent(new CustomEvent('switchTab', { detail: 'group-names' }))}
+								className="inline-flex items-center mt-4 text-sm text-primary hover:underline"
+							>
+								查看全部 {pendingResult.total} 条待审核 →
+							</button>
+						)}
+					</CardContent>
 				</Card>
 			)}
 		</div>

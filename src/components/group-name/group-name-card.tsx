@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, message } from 'antd';
-import { HeartFilled, HeartOutlined } from '@ant-design/icons';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/sonner';
+import { Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface GroupNameCardProps {
@@ -25,7 +26,6 @@ export function GroupNameCard({
 	const [copied, setCopied] = useState(false);
 	const [liked, setLiked] = useState(false);
 	const [localLikes, setLocalLikes] = useState(likes);
-	const [messageApi, contextHolder] = message.useMessage();
 
 	const handleCopy = async (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -33,7 +33,7 @@ export function GroupNameCard({
 			try {
 				await navigator.clipboard.writeText(name);
 				setCopied(true);
-				messageApi.success('已复制到剪贴板');
+				toast.success('已复制到剪贴板');
 				setTimeout(() => setCopied(false), 2000);
 			} catch (error) {
 				console.error('Failed to copy:', error);
@@ -49,7 +49,7 @@ export function GroupNameCard({
 				document.execCommand('copy');
 				document.body.removeChild(textArea);
 				setCopied(true);
-				messageApi.success('已复制到剪贴板');
+				toast.success('已复制到剪贴板');
 				setTimeout(() => setCopied(false), 2000);
 			} catch (fallbackError) {
 				console.error('Fallback copy also failed:', fallbackError);
@@ -73,34 +73,32 @@ export function GroupNameCard({
 	};
 
 	return (
-		<>
-			{contextHolder}
-			<div
-				onClick={handleCopy}
-				className={cn(
-					'border border-gray-200 rounded-lg p-3',
-					'hover:shadow-md transition-shadow duration-200 cursor-pointer',
-					'bg-white',
-					className
-				)}
-			>
-				<div className="flex items-center justify-between gap-2">
-					<h3 className="text-base font-semibold text-gray-900 line-clamp-2 flex-1">
-						{name}
-					</h3>
-					<Button
-						type="text"
-						size="small"
-						icon={liked ? <HeartFilled style={{ color: '#ef4444' }} /> : <HeartOutlined />}
-						onClick={(e) => {
-							e.stopPropagation();
-							handleLike();
-						}}
-					>
-						{localLikes}
-					</Button>
-				</div>
+		<div
+			onClick={handleCopy}
+			className={cn(
+				'border border-gray-200 rounded-lg p-3',
+				'hover:shadow-md transition-shadow duration-200 cursor-pointer',
+				'bg-white',
+				className
+			)}
+		>
+			<div className="flex items-center justify-between gap-2">
+				<h3 className="text-base font-semibold text-gray-900 line-clamp-2 flex-1">
+					{name}
+				</h3>
+				<Button
+					variant="ghost"
+					size="sm"
+					onClick={(e) => {
+						e.stopPropagation();
+						handleLike();
+					}}
+					className={liked ? 'text-red-500 hover:text-red-600' : ''}
+				>
+					<Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
+					<span className="ml-1">{localLikes}</span>
+				</Button>
 			</div>
-		</>
+		</div>
 	);
 }

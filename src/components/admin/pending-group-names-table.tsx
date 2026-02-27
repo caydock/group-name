@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from 'antd';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface PendingGroupName {
 	id: number;
@@ -135,11 +134,10 @@ function ReviewActions({ id }: { id: number }) {
 
 	if (status !== 'pending') {
 		return (
-			<span className={cn(
-				'px-2 py-1 text-xs rounded-full',
-				status === 'approved' && 'bg-green-100 text-green-800',
-				status === 'rejected' && 'bg-red-100 text-red-800'
-			)}>
+			<span className={`px-2 py-1 text-xs rounded-full ${
+				status === 'approved' ? 'bg-green-100 text-green-800' :
+				status === 'rejected' ? 'bg-red-100 text-red-800' : ''
+			}`}>
 				{status === 'approved' ? '已通过' : '已拒绝'}
 			</span>
 		);
@@ -148,20 +146,20 @@ function ReviewActions({ id }: { id: number }) {
 	return (
 		<div className="flex justify-end gap-2 w-full sm:w-auto">
 			<Button
-				type="default"
-				size="small"
+				variant="outline"
+				size="sm"
 				onClick={() => handleReview('rejected')}
 				disabled={isReviewing}
-				className="text-red-600 border-red-300 flex-1 sm:flex-none"
+				className="text-red-600 border-red-300 flex-1 sm:flex-none hover:bg-red-50 hover:border-red-400"
 			>
 				拒绝
 			</Button>
 			<Button
-				type="default"
-				size="small"
+				variant="outline"
+				size="sm"
 				onClick={() => handleReview('approved')}
 				disabled={isReviewing}
-				className="text-green-600 border-green-300 flex-1 sm:flex-none"
+				className="text-green-600 border-green-300 flex-1 sm:flex-none hover:bg-green-50 hover:border-green-400"
 			>
 				通过
 			</Button>
