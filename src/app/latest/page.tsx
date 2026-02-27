@@ -21,7 +21,7 @@ interface LatestPageProps {
 export default async function LatestPage({ searchParams }: LatestPageProps) {
 	const page = parseInt((await searchParams).page || '1');
 	const db = getDB();
-	const result = await getLatestGroupNamesPaginated(db, page, 20);
+	const result = await getLatestGroupNamesPaginated(db, page, 40);
 
 	return (
 		<div className="min-h-screen bg-white">

@@ -13,7 +13,7 @@ export function CategoryCard({ id, name, icon, className }: CategoryCardProps) {
 		<Link
 			href={`/categories/${id}`}
 			className={cn(
-				'flex items-center gap-3 p-4',
+				'flex flex-col items-center gap-3 p-4',
 				'border border-gray-200 rounded-lg',
 				'hover:bg-gray-50 hover:border-gray-300',
 				'transition-all duration-200',

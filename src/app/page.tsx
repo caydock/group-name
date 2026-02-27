@@ -19,8 +19,8 @@ export default async function HomePage() {
 	const db = getDB();
 	
 	const [latestNames, popularNames, categories, featuredCollections] = await Promise.all([
-		getLatestGroupNames(db, 12),
-		getPopularGroupNames(db, 12),
+		getLatestGroupNames(db, 24),
+		getPopularGroupNames(db, 24),
 		getAllCategories(db),
 		getFeaturedCollections(db, 6),
 	]);

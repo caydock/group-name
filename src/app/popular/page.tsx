@@ -21,7 +21,7 @@ interface PopularPageProps {
 export default async function PopularPage({ searchParams }: PopularPageProps) {
 	const page = parseInt((await searchParams).page || '1');
 	const db = getDB();
-	const result = await getPopularGroupNamesPaginated(db, page, 20);
+	const result = await getPopularGroupNamesPaginated(db, page, 40);
 
 	return (
 		<div className="min-h-screen bg-white">

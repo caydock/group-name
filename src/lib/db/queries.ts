@@ -201,7 +201,6 @@ export async function getFeaturedCollections(db: DB, limit: number = 6) {
       eq(collections.id, groupNames.collectionId),
       eq(groupNames.status, 'approved')
     ))
-    .where(eq(collections.isFeatured, true))
     .groupBy(collections.id)
     .orderBy(collections.sortOrder)
     .limit(limit)) as any[];
@@ -365,7 +364,6 @@ export async function getAllCollections(db: DB) {
       name: collections.name,
       description: collections.description,
       coverImage: collections.coverImage,
-      isFeatured: collections.isFeatured,
       groupNamesCount: sql<number>`count(${groupNames.id})`,
       sortOrder: collections.sortOrder,
     })
@@ -384,7 +382,7 @@ export async function createCollection(db: DB, data: {
   name: string;
   description?: string;
   coverImage?: string;
-  isFeatured?: boolean;
+  sortOrder?: number;
 }) {
   const result = await db
     .insert(collections)
@@ -398,7 +396,7 @@ export async function updateCollection(db: DB, id: number, data: {
   name?: string;
   description?: string;
   coverImage?: string;
-  isFeatured?: boolean;
+  sortOrder?: number;
 }) {
   await db
     .update(collections)

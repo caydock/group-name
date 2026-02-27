@@ -31,11 +31,11 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: '未授权' }, { status: 401 });
 		}
 
-		const { name, description, coverImage, isFeatured } = await request.json() as {
+		const { name, description, coverImage, sortOrder } = await request.json() as {
 			name?: string;
 			description?: string;
 			coverImage?: string;
-			isFeatured?: boolean;
+			sortOrder?: number;
 		};
 
 		if (!name) {
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 			name,
 			description,
 			coverImage,
-			isFeatured: isFeatured ?? false,
+			sortOrder,
 		});
 
 		return NextResponse.json({ success: true, id: result.id });

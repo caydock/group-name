@@ -11,7 +11,6 @@ interface Collection {
 	name: string;
 	description: string | null;
 	coverImage: string | null;
-	isFeatured: boolean;
 	groupNamesCount: number;
 	sortOrder: number;
 }
@@ -24,7 +23,6 @@ export function CollectionsTab() {
 		name: '',
 		description: '',
 		coverImage: '',
-		isFeatured: false,
 		sortOrder: '0',
 	});
 	const [submitting, setSubmitting] = useState(false);
@@ -66,7 +64,7 @@ export function CollectionsTab() {
 				throw new Error(data.error || '添加失败');
 			}
 
-			setFormData({ name: '', description: '', coverImage: '', isFeatured: false, sortOrder: '0' });
+			setFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
 			loadCollections();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '添加失败，请重试');
@@ -89,7 +87,6 @@ export function CollectionsTab() {
 			name: collection.name,
 			description: collection.description || '',
 			coverImage: collection.coverImage || '',
-			isFeatured: collection.isFeatured,
 			sortOrder: collection.sortOrder.toString(),
 		});
 	};
@@ -112,7 +109,7 @@ export function CollectionsTab() {
 			}
 
 			setEditingId(null);
-			setFormData({ name: '', description: '', coverImage: '', isFeatured: false, sortOrder: '0' });
+			setFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
 			loadCollections();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '更新失败，请重试');
@@ -123,7 +120,7 @@ export function CollectionsTab() {
 
 	const handleCancelEdit = () => {
 		setEditingId(null);
-		setFormData({ name: '', description: '', coverImage: '', isFeatured: false, sortOrder: '0' });
+		setFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
 		setError('');
 	};
 
@@ -187,20 +184,6 @@ export function CollectionsTab() {
 						/>
 					</div>
 
-					<div className="flex items-center gap-2">
-						<input
-							id="isFeatured"
-							name="isFeatured"
-							type="checkbox"
-							checked={formData.isFeatured}
-							onChange={handleChange}
-							className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-						/>
-						<label htmlFor="isFeatured" className="text-sm font-medium text-gray-700">
-							设为精选
-						</label>
-					</div>
-
 					<div>
 						<label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1">
 							排序
@@ -238,9 +221,6 @@ export function CollectionsTab() {
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								群名数
 							</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								精选
-							</th>
 							<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
 								排序
 							</th>
@@ -260,15 +240,6 @@ export function CollectionsTab() {
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{collection.groupNamesCount}
-								</td>
-								<td className="px-6 py-4 whitespace-nowrap">
-									{collection.isFeatured ? (
-										<span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
-											是
-										</span>
-									) : (
-										<span className="text-gray-400">否</span>
-									)}
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
 									{collection.sortOrder}
@@ -351,16 +322,6 @@ export function CollectionsTab() {
 										onChange={handleChange}
 									/>
 								</div>
-								<div className="flex items-center gap-2">
-									<input
-										name="isFeatured"
-										type="checkbox"
-										checked={formData.isFeatured}
-										onChange={handleChange}
-										className="h-4 w-4"
-									/>
-									<label className="text-sm font-medium text-gray-700">设为精选</label>
-								</div>
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">排序</label>
 									<Input
@@ -402,13 +363,6 @@ export function CollectionsTab() {
 								)}
 								<div className="flex flex-wrap gap-2 mb-3">
 									<span className="text-sm text-gray-600">群名数: {collection.groupNamesCount}</span>
-									{collection.isFeatured ? (
-										<span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
-											精选
-										</span>
-									) : (
-										<span className="text-gray-400">非精选</span>
-									)}
 								</div>
 								<div className="flex justify-between items-center pt-3 border-t border-gray-100">
 									<span className="text-sm text-gray-600">排序: {collection.sortOrder}</span>

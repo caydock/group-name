@@ -16,11 +16,11 @@ export async function PUT(
 		}
 
 		const id = parseInt((await params).id);
-		const { name, description, coverImage, isFeatured } = await request.json() as {
+		const { name, description, coverImage, sortOrder } = await request.json() as {
 			name?: string;
 			description?: string;
 			coverImage?: string;
-			isFeatured?: boolean;
+			sortOrder?: number;
 		};
 
 		if (!name) {
@@ -32,7 +32,7 @@ export async function PUT(
 			name,
 			description,
 			coverImage,
-			isFeatured,
+			sortOrder,
 		});
 
 		return NextResponse.json({ success: true });
