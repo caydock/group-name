@@ -28,21 +28,20 @@ export default async function HomePage() {
 
 	return (
 		<div className="min-h-screen bg-white">
-			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-2">
-				<section
-					className="text-center pt-24 pb-12 mb-12 bg-gray-50"
-					style={{
-						backgroundImage: `
-							linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-							linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
-						`,
-						backgroundSize: '40px 40px',
-					}}
-				>
-					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-						🏝️ 发现有趣好玩的群聊名称
+			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-2 bg-white">
+				<section className="text-center pt-24 pb-12 mb-12 relative overflow-hidden">
+					<div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+						<span className="absolute top-8 left-8 text-3xl sm:text-6xl opacity-10 sm:opacity-20">💬</span>
+						<span className="absolute top-16 right-12 text-3xl sm:text-5xl opacity-10 sm:opacity-20">👥</span>
+						<span className="absolute bottom-8 left-16 text-3xl sm:text-5xl opacity-10 sm:opacity-20">🎉</span>
+						<span className="absolute bottom-12 right-8 text-3xl sm:text-6xl opacity-10 sm:opacity-20">🌟</span>
+						<span className="absolute top-20 left-1/4 text-2xl sm:text-4xl opacity-8 sm:opacity-15">✨</span>
+						<span className="absolute top-12 right-1/4 text-2xl sm:text-4xl opacity-8 sm:opacity-15">🎊</span>
+					</div>
+					<h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 relative z-10">
+						发现有趣好玩的群聊名称
 					</h1>
-					<p className="text-lg text-gray-600">
+					<p className="text-lg text-gray-600 relative z-10">
 						发现、复制和分享有趣的群名
 					</p>
 				</section>
