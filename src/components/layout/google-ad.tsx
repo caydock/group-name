@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 
 export function GoogleAd() {
 	const adRef = useRef<HTMLModElement>(null);
-	const [isMobile, setIsMobile] = useState(false);
 	const [adLoaded, setAdLoaded] = useState(false);
 	const [adVisible, setAdVisible] = useState(true);
 	const [isMounted, setIsMounted] = useState(false);
 
 	useEffect(() => {
 		setIsMounted(true);
-		setIsMobile(window.innerWidth < 768);
 
 		if (adRef.current && !adRef.current.hasAttribute('data-ad-initialized')) {
 			adRef.current.setAttribute('data-ad-initialized', 'true');
@@ -52,26 +50,29 @@ export function GoogleAd() {
 		checkAdLoad();
 	}, []);
 
-	const adHeight = isMobile ? '50px' : '90px';
+	const adHeight = '90px';
 
 	if (!adVisible) {
 		return null;
 	}
 
 	return (
-		<div className="flex justify-center">
+		<div className="flex justify-center w-full pt-4">
 			<ins
 				ref={adRef}
 				className="adsbygoogle bg-gray-100"
 				style={{
-					display: 'inline-block',
-					width: isMobile ? '300px' : '970px',
+					display: 'block',
+					width: '100%',
+					maxWidth: '1200px',
 					height: adHeight,
 					minHeight: adHeight,
 					visibility: isMounted && adLoaded ? 'visible' : 'hidden',
 				}}
 				data-ad-client="ca-pub-2011896129037768"
-				data-ad-slot={isMobile ? '8464166843' : '5715402930'}
+				data-ad-format="auto"
+				data-full-width-responsive="true"
+				data-ad-slot="5715402930"
 			/>
 		</div>
 	);

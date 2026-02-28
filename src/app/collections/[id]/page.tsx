@@ -55,8 +55,6 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 					{ label: collection.name }
 				]} />
 
-				<GoogleAd />
-
 				<div className="flex items-center justify-center gap-4 mt-8 mb-8 text-center">
 					<div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -108,6 +106,8 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 						)}
 					</div>
 				)}
+
+				<GoogleAd />
 		</main>
 		</div>
 	);

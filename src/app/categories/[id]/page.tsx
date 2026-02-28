@@ -55,8 +55,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 					{ label: category.name }
 				]} />
 
-				<GoogleAd />
-
 				<div className="flex items-center justify-center gap-3 mt-8 mb-8 text-center">
 					{category.icon && (
 						<span className="text-4xl">{category.icon}</span>
@@ -109,6 +107,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 						)}
 					</div>
 				)}
+
+				<GoogleAd />
 		</main>
 		</div>
 	);
