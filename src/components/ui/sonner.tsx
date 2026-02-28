@@ -88,7 +88,7 @@ function Toaster({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="toaster"
-      className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] flex flex-col gap-2 p-4 max-h-screen w-full sm:max-w-md ${className || ""}`}
+      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] flex flex-col gap-2 p-4 max-h-screen w-full sm:max-w-md ${className || ""}`}
       {...props}
     >
       {toasts.current?.map((t) => (

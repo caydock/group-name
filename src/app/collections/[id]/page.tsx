@@ -2,6 +2,7 @@ import { getDB } from '@/lib/db';
 import { getGroupNamesByCollection, getCollectionById } from '@/lib/db/queries';
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { GoogleAd } from '@/components/layout/google-ad';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -53,7 +54,10 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 					{ label: '合集', href: '/collections' },
 					{ label: collection.name }
 				]} />
-				<div className="flex items-start gap-4 mb-8">
+
+				<GoogleAd />
+
+				<div className="flex items-start gap-4 mt-4 mb-4">
 					<div className="flex-1">
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">
 							{collection.name}

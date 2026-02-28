@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { ConditionalHeader } from "@/components/layout/conditional-header";
 import { Footer } from "@/components/layout/footer";
+import { GoogleAd } from "@/components/layout/google-ad";
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleAnalytics } from "@/components/layout/google-analytics";
 import { JsonLd } from "@/components/layout/json-ld";

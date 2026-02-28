@@ -2,6 +2,7 @@ import { getDB } from '@/lib/db';
 import { getGroupNamesByCategory, getCategoryById } from '@/lib/db/queries';
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import { Breadcrumb } from '@/components/layout/breadcrumb';
+import { GoogleAd } from '@/components/layout/google-ad';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -53,7 +54,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 					{ label: '分类', href: '/categories' },
 					{ label: category.name }
 				]} />
-				<div className="flex items-center gap-3 mb-8">
+
+				<GoogleAd />
+
+				<div className="flex items-center gap-3 mt-4 mb-4">
 					{category.icon && (
 						<span className="text-4xl">{category.icon}</span>
 					)}

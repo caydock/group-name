@@ -3,6 +3,7 @@ import { getLatestGroupNames, getPopularGroupNames, getAllCategories, getFeature
 import { GroupNameCard } from '@/components/group-name/group-name-card';
 import { CategoryCard } from '@/components/group-name/category-card';
 import { CollectionCard } from '@/components/group-name/collection-card';
+import { GoogleAd } from '@/components/layout/google-ad';
 import { TrendingUp, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -27,8 +28,17 @@ export default async function HomePage() {
 
 	return (
 		<div className="min-h-screen bg-white">
-			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-				<section className="text-center py-12 mb-12 bg-gradient-to-b from-gray-50 to-white">
+			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-2">
+				<section
+					className="text-center pt-24 pb-12 mb-12 bg-gray-50"
+					style={{
+						backgroundImage: `
+							linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+							linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)
+						`,
+						backgroundSize: '40px 40px',
+					}}
+				>
 					<h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
 						🏝️ 发现有趣好玩的群聊名称
 					</h1>
@@ -37,7 +47,7 @@ export default async function HomePage() {
 					</p>
 				</section>
 
-				<section className="mb-12">
+				<section className="mb-6">
 					<div className="flex items-center justify-between mb-6">
 						<h2 className="text-2xl font-bold text-gray-900">分类浏览</h2>
 						<Link href="/categories" className="text-gray-600 hover:text-gray-900">
@@ -56,7 +66,9 @@ export default async function HomePage() {
 					</div>
 				</section>
 
-				<section className="mb-12">
+				<GoogleAd />
+
+				<section className="mt-6 mb-12">
 					<div className="flex items-center justify-between mb-6">
 						<div className="flex items-center gap-2">
 							<Clock className="h-6 w-6 text-gray-700" />
@@ -105,7 +117,7 @@ export default async function HomePage() {
 				</section>
 
 				{featuredCollections.length > 0 && (
-					<section className="mb-12">
+					<section className="mb-4">
 						<div className="flex items-center justify-between mb-6">
 							<h2 className="text-2xl font-bold text-gray-900">精选合集</h2>
 							<Link href="/collections" className="text-gray-600 hover:text-gray-900">
