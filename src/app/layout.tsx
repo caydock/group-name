@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { ConditionalHeader } from "@/components/layout/conditional-header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/sonner";
+import { GoogleAnalytics } from "@/components/layout/google-analytics";
 
 const inter = Inter({
 	variable: "--font-inter",
@@ -81,6 +82,7 @@ export default function RootLayout({
 			<body
 				className={`${inter.variable} antialiased`}
 			>
+				<GoogleAnalytics />
 				<ConditionalHeader />
 				{children}
 				<Footer />
