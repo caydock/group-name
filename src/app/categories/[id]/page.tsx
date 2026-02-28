@@ -55,7 +55,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 					{ label: category.name }
 				]} />
 
-				<GoogleAd />
+				<GoogleAd align="left" />
 
 				<div className="flex items-center gap-3 mt-4 mb-4">
 					{category.icon && (

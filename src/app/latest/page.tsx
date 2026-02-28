@@ -29,7 +29,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<Breadcrumb items={[{ label: '最新群名' }]} />
 
-				<GoogleAd />
+				<GoogleAd align="left" />
 
 				<div className="flex items-center gap-2 mt-4 mb-4">
 					<Clock className="h-6 w-6 text-gray-700" />

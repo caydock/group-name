@@ -23,7 +23,7 @@ export default async function CollectionsPage() {
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<Breadcrumb items={[{ label: '合集' }]} />
 
-				<GoogleAd />
+				<GoogleAd align="left" />
 
 				<div className="flex items-center gap-2 mt-4 mb-4">
 					<BookOpen className="h-6 w-6 text-gray-700" />

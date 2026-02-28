@@ -46,7 +46,9 @@ export default async function HomePage() {
 					</p>
 				</section>
 
-				<section className="mb-6">
+				<GoogleAd />
+
+				<section className="mt-8 mb-8">
 					<div className="flex items-center justify-between mb-6">
 						<h2 className="text-2xl font-bold text-gray-900">分类浏览</h2>
 						<Link href="/categories" className="text-gray-600 hover:text-gray-900">
@@ -61,11 +63,9 @@ export default async function HomePage() {
 								name={category.name}
 								icon={category.icon || undefined}
 							/>
-						))}
-					</div>
+					))}
+				</div>
 				</section>
-
-				<GoogleAd />
 
 				<section className="mt-6 mb-12">
 					<div className="flex items-center justify-between mb-6">

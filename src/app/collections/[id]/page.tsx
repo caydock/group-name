@@ -55,7 +55,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 					{ label: collection.name }
 				]} />
 
-				<GoogleAd />
+				<GoogleAd align="left" />
 
 				<div className="flex items-start gap-4 mt-4 mb-4">
 					<div className="flex-1">
