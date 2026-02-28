@@ -6,6 +6,7 @@ import { ConditionalHeader } from "@/components/layout/conditional-header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleAnalytics } from "@/components/layout/google-analytics";
+import { JsonLd } from "@/components/layout/json-ld";
 
 const inter = Inter({
 	variable: "--font-inter",
@@ -16,11 +17,33 @@ const inter = Inter({
 export const metadata: Metadata = {
 	metadataBase: new URL("https://qm.caydock.com"),
 	title: {
-		default: "群名岛 - 发现有趣好玩的群聊名称",
+		default: "群名岛 - 发现有趣好玩的群聊名称大全",
 		template: "%s | 群名岛"
 	},
-	description: "发现发现有趣好玩的群聊名称，支持复制和分类浏览，创建您的群名合集。搞笑、文艺、商务、家庭、校园、游戏等各种分类等你来探索。",
-	keywords: ["群名", "群名岛", "搞笑群名", "群名生成", "群名推荐", "群聊名称"],
+	description: "群名岛提供海量群聊名称大全，包括搞笑群名、文艺群名、商务群名、家庭群名、校园群名、游戏群名等各种分类。支持按分类浏览、查看最新和热门群名、一键复制使用，帮您轻松找到心仪的群聊名称。",
+	keywords: [
+		"群名",
+		"群名岛",
+		"群名大全",
+		"搞笑群名",
+		"文艺群名",
+		"商务群名",
+		"家庭群名",
+		"校园群名",
+		"游戏群名",
+		"群名生成",
+		"群名推荐",
+		"群聊名称",
+		"微信群名",
+		"QQ群名",
+		"三人群名",
+		"四人群名",
+		"五人群名",
+		"六人群名",
+		"群名创意",
+		"好听的群名",
+		"有特色的群名"
+	],
 	authors: [{ name: "群名岛" }],
 	creator: "群名岛",
 	icons: {
@@ -36,22 +59,23 @@ export const metadata: Metadata = {
 		type: "website",
 		locale: "zh_CN",
 		url: "https://qm.caydock.com",
-		title: "群名岛 - 发现有趣好玩的群聊名称",
-		description: "发现发现有趣好玩的群聊名称，支持复制和分类浏览",
+		title: "群名岛 - 发现有趣好玩的群聊名称大全",
+		description: "群名岛提供海量群聊名称大全，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类，支持一键复制和分类浏览",
 		siteName: "群名岛",
 		images: [
 			{
-				url: '/images/logo-256x256.jpg',
+				url: 'https://qm.caydock.com/images/logo-256x256.jpg',
 				width: 256,
 				height: 256,
+				alt: '群名岛 Logo',
 			},
 		],
 	},
 	twitter: {
-		card: "summary",
-		title: "群名岛 - 发现有趣好玩的群聊名称",
-		description: "发现发现有趣好玩的群聊名称，支持复制和分类浏览",
-		images: ['/images/logo-256x256.jpg'],
+		card: "summary_large_image",
+		title: "群名岛 - 发现有趣好玩的群聊名称大全",
+		description: "群名岛提供海量群聊名称大全，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类",
+		images: ['https://qm.caydock.com/images/logo-256x256.jpg'],
 	},
 	robots: {
 		index: true,
@@ -82,6 +106,7 @@ export default function RootLayout({
 			<body
 				className={`${inter.variable} antialiased`}
 			>
+				<JsonLd />
 				<GoogleAnalytics />
 				<ConditionalHeader />
 				{children}

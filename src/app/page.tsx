@@ -10,9 +10,9 @@ import type { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-	title: '群名岛 - 发现有趣好玩的群聊名称',
-	description: '群名岛提供海量群聊名称，包括搞笑、文艺、商务、家庭、校园、游戏等各种分类，支持按分类浏览、查看最新和热门群名，一键复制使用',
-	keywords: '群名岛,群名,群聊名称,搞笑群名,文艺群名,群名推荐',
+	title: '群名岛 - 海量群聊名称大全，搞笑、文艺、商务、家庭、校园、游戏群名',
+	description: '群名岛提供海量群聊名称大全，包括搞笑群名、文艺群名、商务群名、家庭群名、校园群名、游戏群名等各种分类。支持按分类浏览、查看最新和热门群名、一键复制使用，帮您轻松找到心仪的群聊名称。',
+	keywords: '群名,群名岛,群名大全,搞笑群名,文艺群名,商务群名,家庭群名,校园群名,游戏群名,三人群名,四人群名,五人群名,六人群名,微信群名,QQ群名,群名生成,群名推荐,好听的群名',
 };
 
 export default async function HomePage() {
