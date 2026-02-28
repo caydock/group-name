@@ -2,17 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-interface GoogleAdProps {
-	align?: 'center' | 'left';
-}
-
-export function GoogleAd({ align = 'center' }: GoogleAdProps) {
+export function GoogleAd() {
 	const adRef = useRef<HTMLModElement>(null);
 	const [isMobile, setIsMobile] = useState(false);
 	const [adLoaded, setAdLoaded] = useState(false);
 	const [adVisible, setAdVisible] = useState(true);
+	const [isMounted, setIsMounted] = useState(false);
 
 	useEffect(() => {
+		setIsMounted(true);
 		setIsMobile(window.innerWidth < 768);
 
 		if (adRef.current && !adRef.current.hasAttribute('data-ad-initialized')) {
@@ -61,7 +59,7 @@ export function GoogleAd({ align = 'center' }: GoogleAdProps) {
 	}
 
 	return (
-		<div className={`flex ${align === 'left' ? 'justify-start' : 'justify-center'}`}>
+		<div className="flex justify-center">
 			<ins
 				ref={adRef}
 				className="adsbygoogle bg-gray-100"
@@ -70,7 +68,7 @@ export function GoogleAd({ align = 'center' }: GoogleAdProps) {
 					width: isMobile ? '300px' : '970px',
 					height: adHeight,
 					minHeight: adHeight,
-					visibility: adLoaded ? 'visible' : 'hidden',
+					visibility: isMounted && adLoaded ? 'visible' : 'hidden',
 				}}
 				data-ad-client="ca-pub-2011896129037768"
 				data-ad-slot={isMobile ? '8464166843' : '5715402930'}

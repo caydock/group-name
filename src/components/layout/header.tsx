@@ -21,38 +21,37 @@ export function Header() {
 						</Link>
 					</div>
 
-					<>
-						<nav className="hidden md:flex items-center gap-6">
-							<Link href="/" className="flex items-center text-gray-600 hover:text-gray-900">
-								<Home className="h-4 w-4 mr-1" />
-								首页
-							</Link>
-							<Link href="/categories" className="flex items-center text-gray-600 hover:text-gray-900">
-								<Folder className="h-4 w-4 mr-1" />
-								分类
-							</Link>
-							<Link href="/collections" className="flex items-center text-gray-600 hover:text-gray-900">
-								<Layers className="h-4 w-4 mr-1" />
-								合集
-							</Link>
-							<Link href="/submit" className="flex items-center text-gray-600 hover:text-gray-900">
-								<Plus className="h-4 w-4 mr-1" />
-								提交群名
-							</Link>
-						</nav>
-						<div className="flex items-center gap-3">
-							<button
-								onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-								className="md:hidden p-2 rounded-md hover:bg-gray-100"
-							>
-								{mobileMenuOpen ? (
-									<X className="h-6 w-6 text-gray-600" />
-								) : (
-									<Menu className="h-6 w-6 text-gray-600" />
-								)}
-							</button>
-						</div>
-					</>
+					<nav className="hidden md:flex items-center gap-6 ml-auto">
+						<Link href="/" className="flex items-center text-gray-600 hover:text-gray-900">
+							<Home className="h-4 w-4 mr-1" />
+							首页
+						</Link>
+						<Link href="/categories" className="flex items-center text-gray-600 hover:text-gray-900">
+							<Folder className="h-4 w-4 mr-1" />
+							分类
+						</Link>
+						<Link href="/collections" className="flex items-center text-gray-600 hover:text-gray-900">
+							<Layers className="h-4 w-4 mr-1" />
+							合集
+						</Link>
+						<Link href="/submit" className="flex items-center text-gray-600 hover:text-gray-900">
+							<Plus className="h-4 w-4 mr-1" />
+							提交群名
+						</Link>
+					</nav>
+
+					<div className="flex items-center gap-3">
+						<button
+							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+							className="md:hidden p-2 rounded-md hover:bg-gray-100"
+						>
+							{mobileMenuOpen ? (
+								<X className="h-6 w-6 text-gray-600" />
+							) : (
+								<Menu className="h-6 w-6 text-gray-600" />
+							)}
+						</button>
+					</div>
 				</div>
 			</div>
 			{mobileMenuOpen && (

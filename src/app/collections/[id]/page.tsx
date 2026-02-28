@@ -55,10 +55,10 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 					{ label: collection.name }
 				]} />
 
-				<GoogleAd align="left" />
+				<GoogleAd />
 
-				<div className="flex items-start gap-4 mt-4 mb-4">
-					<div className="flex-1">
+				<div className="flex items-center justify-center gap-4 mt-8 mb-8 text-center">
+					<div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">
 							{collection.name}
 						</h1>
@@ -68,7 +68,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
 					</div>
 				</div>
 
-				<p className="text-sm text-gray-600 mb-6">
+				<p className="text-sm text-gray-600 mb-6 text-center">
 					共 {result.total} 个群名
 				</p>
 

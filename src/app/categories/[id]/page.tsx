@@ -55,9 +55,9 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 					{ label: category.name }
 				]} />
 
-				<GoogleAd align="left" />
+				<GoogleAd />
 
-				<div className="flex items-center gap-3 mt-4 mb-4">
+				<div className="flex items-center justify-center gap-3 mt-8 mb-8 text-center">
 					{category.icon && (
 						<span className="text-4xl">{category.icon}</span>
 					)}
@@ -69,7 +69,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 					</div>
 				</div>
 
-				<p className="text-sm text-gray-600 mb-6">
+				<p className="text-sm text-gray-600 mb-6 text-center">
 					共 {result.total} 个群名
 				</p>
 

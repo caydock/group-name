@@ -29,14 +29,14 @@ export default async function PopularPage({ searchParams }: PopularPageProps) {
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<Breadcrumb items={[{ label: '热门群名' }]} />
 
-				<GoogleAd align="left" />
+				<GoogleAd />
 
-				<div className="flex items-center gap-2 mt-4 mb-4">
+				<div className="flex items-center justify-center gap-2 mt-8 mb-8">
 					<TrendingUp className="h-6 w-6 text-gray-700" />
 					<h1 className="text-2xl font-bold text-gray-900">热门群名</h1>
 				</div>
 
-				<p className="text-sm text-gray-600 mb-6">
+				<p className="text-sm text-gray-600 mb-6 text-center">
 					共 {result.total} 个群名
 				</p>
 
