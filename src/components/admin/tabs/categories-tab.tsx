@@ -18,7 +18,13 @@ export function CategoriesTab() {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [editingId, setEditingId] = useState<number | null>(null);
-	const [formData, setFormData] = useState({
+	const [addFormData, setAddFormData] = useState({
+		name: '',
+		icon: '',
+		description: '',
+		sortOrder: '0',
+	});
+	const [editFormData, setEditFormData] = useState({
 		name: '',
 		icon: '',
 		description: '',
@@ -37,7 +43,7 @@ export function CategoriesTab() {
 			const res = await fetch('/api/admin/categories');
 			if (res.ok) {
 				const data = await res.json() as Category[];
-				setCategories(data);
+				setCategories(data.sort((a, b) => a.sortOrder - b.sortOrder));
 			}
 		} catch (error) {
 			console.error('加载分类失败:', error);
@@ -55,7 +61,7 @@ export function CategoriesTab() {
 			const res = await fetch('/api/admin/categories', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
+				body: JSON.stringify(addFormData),
 			});
 
 			if (!res.ok) {
@@ -63,7 +69,7 @@ export function CategoriesTab() {
 				throw new Error(data.error || '添加失败');
 			}
 
-			setFormData({ name: '', icon: '', description: '', sortOrder: '0' });
+			setAddFormData({ name: '', icon: '', description: '', sortOrder: '0' });
 			loadCategories();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '添加失败，请重试');
@@ -72,13 +78,17 @@ export function CategoriesTab() {
 		}
 	};
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+	const handleAddChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+		setAddFormData({ ...addFormData, [e.target.name]: e.target.value });
+	};
+
+	const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+		setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
 	};
 
 	const handleEdit = (category: Category) => {
 		setEditingId(category.id);
-		setFormData({
+		setEditFormData({
 			name: category.name,
 			icon: category.icon || '',
 			description: category.description || '',
@@ -95,7 +105,7 @@ export function CategoriesTab() {
 			const res = await fetch(`/api/admin/categories/${id}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
+				body: JSON.stringify(editFormData),
 			});
 
 			if (!res.ok) {
@@ -104,7 +114,6 @@ export function CategoriesTab() {
 			}
 
 			setEditingId(null);
-			setFormData({ name: '', icon: '', description: '', sortOrder: '0' });
 			loadCategories();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '更新失败，请重试');
@@ -115,7 +124,6 @@ export function CategoriesTab() {
 
 	const handleCancelEdit = () => {
 		setEditingId(null);
-		setFormData({ name: '', icon: '', description: '', sortOrder: '0' });
 		setError('');
 	};
 
@@ -149,8 +157,8 @@ export function CategoriesTab() {
 						<Input
 							id="name"
 							name="name"
-							value={formData.name}
-							onChange={handleChange}
+							value={addFormData.name}
+							onChange={handleAddChange}
 							required
 						/>
 					</div>
@@ -162,8 +170,8 @@ export function CategoriesTab() {
 						<Input
 							id="icon"
 							name="icon"
-							value={formData.icon}
-							onChange={handleChange}
+							value={addFormData.icon}
+							onChange={handleAddChange}
 							placeholder="😀"
 						/>
 					</div>
@@ -175,8 +183,8 @@ export function CategoriesTab() {
 						<Input
 							id="description"
 							name="description"
-							value={formData.description}
-							onChange={handleChange}
+							value={addFormData.description}
+							onChange={handleAddChange}
 						/>
 					</div>
 
@@ -188,8 +196,8 @@ export function CategoriesTab() {
 							id="sortOrder"
 							name="sortOrder"
 							type="number"
-							value={formData.sortOrder}
-							onChange={handleChange}
+							value={addFormData.sortOrder}
+							onChange={handleAddChange}
 						/>
 					</div>
 				</div>
@@ -229,21 +237,60 @@ export function CategoriesTab() {
 						{categories.map((category) => (
 							<tr key={category.id} className="hover:bg-gray-50">
 								<td className="px-6 py-4 whitespace-nowrap">
-									<span className="text-2xl">{category.icon}</span>
+									{editingId === category.id ? (
+										<Input
+											name="icon"
+											value={editFormData.icon}
+											onChange={handleEditChange}
+											placeholder="😀"
+											className="w-16 h-8 text-center text-2xl"
+										/>
+									) : (
+										<span className="text-2xl">{category.icon}</span>
+									)}
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-									{category.name}
+									{editingId === category.id ? (
+										<Input
+											name="name"
+											value={editFormData.name}
+											onChange={handleEditChange}
+											className="h-8"
+											required
+										/>
+									) : (
+										category.name
+									)}
 								</td>
 								<td className="px-6 py-4 text-sm text-gray-500">
-									{category.description || '-'}
+									{editingId === category.id ? (
+										<Input
+											name="description"
+											value={editFormData.description}
+											onChange={handleEditChange}
+											className="h-8"
+										/>
+									) : (
+										category.description || '-'
+									)}
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-									{category.sortOrder}
+									{editingId === category.id ? (
+										<Input
+											name="sortOrder"
+											type="number"
+											value={editFormData.sortOrder}
+											onChange={handleEditChange}
+											className="w-20 text-right h-8"
+										/>
+									) : (
+										category.sortOrder
+									)}
 								</td>
 								<td className="px-6 py-4 text-right text-sm font-medium w-48">
 									<div className="flex justify-end">
 										{editingId === category.id ? (
-											<div className="flex flex-col gap-2">
+											<div className="flex gap-2">
 												<Button
 													size="sm"
 													variant="outline"
@@ -256,14 +303,8 @@ export function CategoriesTab() {
 													onClick={(e) => handleUpdate(e, category.id)}
 													disabled={submitting}
 												>
-													{submitting ? '保存中...' : '保存'}
+													保存
 												</Button>
-												<DeleteButton
-													action={`/api/admin/categories/${category.id}`}
-													onSuccess={loadCategories}
-												>
-													删除
-												</DeleteButton>
 											</div>
 										) : (
 											<Button
@@ -297,8 +338,8 @@ export function CategoriesTab() {
 									<label className="block text-sm font-medium text-gray-700 mb-1">图标</label>
 									<Input
 										name="icon"
-										value={formData.icon}
-										onChange={handleChange}
+										value={editFormData.icon}
+										onChange={handleEditChange}
 										placeholder="😀"
 									/>
 								</div>
@@ -306,8 +347,8 @@ export function CategoriesTab() {
 									<label className="block text-sm font-medium text-gray-700 mb-1">名称</label>
 									<Input
 										name="name"
-										value={formData.name}
-										onChange={handleChange}
+										value={editFormData.name}
+										onChange={handleEditChange}
 										required
 									/>
 								</div>
@@ -315,8 +356,8 @@ export function CategoriesTab() {
 									<label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
 									<Input
 										name="description"
-										value={formData.description}
-										onChange={handleChange}
+										value={editFormData.description}
+										onChange={handleEditChange}
 									/>
 								</div>
 								<div>
@@ -324,8 +365,8 @@ export function CategoriesTab() {
 									<Input
 										name="sortOrder"
 										type="number"
-										value={formData.sortOrder}
-										onChange={handleChange}
+										value={editFormData.sortOrder}
+										onChange={handleEditChange}
 									/>
 								</div>
 								<div className="flex gap-2">

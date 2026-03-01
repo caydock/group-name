@@ -19,7 +19,13 @@ export function CollectionsTab() {
 	const [collections, setCollections] = useState<Collection[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [editingId, setEditingId] = useState<number | null>(null);
-	const [formData, setFormData] = useState({
+	const [addFormData, setAddFormData] = useState({
+		name: '',
+		description: '',
+		coverImage: '',
+		sortOrder: '0',
+	});
+	const [editFormData, setEditFormData] = useState({
 		name: '',
 		description: '',
 		coverImage: '',
@@ -38,7 +44,7 @@ export function CollectionsTab() {
 			const res = await fetch('/api/admin/collections');
 			if (res.ok) {
 				const data = await res.json() as Collection[];
-				setCollections(data);
+				setCollections(data.sort((a, b) => a.sortOrder - b.sortOrder));
 			}
 		} catch (error) {
 			console.error('加载合集失败:', error);
@@ -56,7 +62,7 @@ export function CollectionsTab() {
 			const res = await fetch('/api/admin/collections', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
+				body: JSON.stringify(addFormData),
 			});
 
 			if (!res.ok) {
@@ -64,7 +70,7 @@ export function CollectionsTab() {
 				throw new Error(data.error || '添加失败');
 			}
 
-			setFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
+			setAddFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
 			loadCollections();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '添加失败，请重试');
@@ -73,17 +79,25 @@ export function CollectionsTab() {
 		}
 	};
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+	const handleAddChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
 		const { name, value, type } = e.target;
-		setFormData({
-			...formData,
+		setAddFormData({
+			...addFormData,
+			[name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+		});
+	};
+
+	const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+		const { name, value, type } = e.target;
+		setEditFormData({
+			...editFormData,
 			[name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
 		});
 	};
 
 	const handleEdit = (collection: Collection) => {
 		setEditingId(collection.id);
-		setFormData({
+		setEditFormData({
 			name: collection.name,
 			description: collection.description || '',
 			coverImage: collection.coverImage || '',
@@ -100,7 +114,7 @@ export function CollectionsTab() {
 			const res = await fetch(`/api/admin/collections/${id}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
+				body: JSON.stringify(editFormData),
 			});
 
 			if (!res.ok) {
@@ -109,7 +123,6 @@ export function CollectionsTab() {
 			}
 
 			setEditingId(null);
-			setFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
 			loadCollections();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '更新失败，请重试');
@@ -120,7 +133,6 @@ export function CollectionsTab() {
 
 	const handleCancelEdit = () => {
 		setEditingId(null);
-		setFormData({ name: '', description: '', coverImage: '', sortOrder: '0' });
 		setError('');
 	};
 
@@ -154,8 +166,8 @@ export function CollectionsTab() {
 						<Input
 							id="name"
 							name="name"
-							value={formData.name}
-							onChange={handleChange}
+							value={addFormData.name}
+							onChange={handleAddChange}
 							required
 						/>
 					</div>
@@ -167,8 +179,8 @@ export function CollectionsTab() {
 						<Input
 							id="description"
 							name="description"
-							value={formData.description}
-							onChange={handleChange}
+							value={addFormData.description}
+							onChange={handleAddChange}
 						/>
 					</div>
 
@@ -179,8 +191,8 @@ export function CollectionsTab() {
 						<Input
 							id="coverImage"
 							name="coverImage"
-							value={formData.coverImage}
-							onChange={handleChange}
+							value={addFormData.coverImage}
+							onChange={handleAddChange}
 						/>
 					</div>
 
@@ -192,8 +204,8 @@ export function CollectionsTab() {
 							id="sortOrder"
 							name="sortOrder"
 							type="number"
-							value={formData.sortOrder}
-							onChange={handleChange}
+							value={addFormData.sortOrder}
+							onChange={handleAddChange}
 						/>
 					</div>
 
@@ -233,21 +245,50 @@ export function CollectionsTab() {
 						{collections.map((collection) => (
 							<tr key={collection.id} className="hover:bg-gray-50">
 								<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-									{collection.name}
+									{editingId === collection.id ? (
+										<Input
+											name="name"
+											value={editFormData.name}
+											onChange={handleEditChange}
+											className="h-8"
+											required
+										/>
+									) : (
+										collection.name
+									)}
 								</td>
 								<td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-									{collection.description || '-'}
+									{editingId === collection.id ? (
+										<Input
+											name="description"
+											value={editFormData.description}
+											onChange={handleEditChange}
+											className="h-8"
+										/>
+									) : (
+										collection.description || '-'
+									)}
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{collection.groupNamesCount}
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-									{collection.sortOrder}
+									{editingId === collection.id ? (
+										<Input
+											name="sortOrder"
+											type="number"
+											value={editFormData.sortOrder}
+											onChange={handleEditChange}
+											className="w-20 text-right h-8"
+										/>
+									) : (
+										collection.sortOrder
+									)}
 								</td>
 								<td className="px-6 py-4 text-right text-sm font-medium w-48">
 									<div className="flex justify-end">
 										{editingId === collection.id ? (
-											<div className="flex flex-col gap-2">
+											<div className="flex gap-2">
 												<Button
 													size="sm"
 													variant="outline"
@@ -260,14 +301,8 @@ export function CollectionsTab() {
 													onClick={(e) => handleUpdate(e, collection.id)}
 													disabled={submitting}
 												>
-													{submitting ? '保存中...' : '保存'}
+													保存
 												</Button>
-												<DeleteButton
-													action={`/api/admin/collections/${collection.id}`}
-													onSuccess={loadCollections}
-												>
-													删除
-												</DeleteButton>
 											</div>
 										) : (
 											<Button
@@ -301,8 +336,8 @@ export function CollectionsTab() {
 									<label className="block text-sm font-medium text-gray-700 mb-1">合集名称</label>
 									<Input
 										name="name"
-										value={formData.name}
-										onChange={handleChange}
+										value={editFormData.name}
+										onChange={handleEditChange}
 										required
 									/>
 								</div>
@@ -310,16 +345,16 @@ export function CollectionsTab() {
 									<label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
 									<Input
 										name="description"
-										value={formData.description}
-										onChange={handleChange}
+										value={editFormData.description}
+										onChange={handleEditChange}
 									/>
 								</div>
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-1">封面图片URL</label>
 									<Input
 										name="coverImage"
-										value={formData.coverImage}
-										onChange={handleChange}
+										value={editFormData.coverImage}
+										onChange={handleEditChange}
 									/>
 								</div>
 								<div>
@@ -327,8 +362,8 @@ export function CollectionsTab() {
 									<Input
 										name="sortOrder"
 										type="number"
-										value={formData.sortOrder}
-										onChange={handleChange}
+										value={editFormData.sortOrder}
+										onChange={handleEditChange}
 									/>
 								</div>
 								<div className="flex gap-2">

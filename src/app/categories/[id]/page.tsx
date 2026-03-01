@@ -26,9 +26,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 	}
 
 	return {
-		title: `${category.name}群名`,
+		title: `${category.name}类群名大全`,
 		description: category.description || `查看${category.name}分类下的所有群名`,
-		keywords: `${category.name},群名,${category.name}群名`,
+		keywords: `${category.name},群名,${category.name}群名,${category.name}类群名大全`,
 	};
 }
 
